@@ -1,0 +1,52 @@
+## Funcion para saber el dia de hoy y registrarlo en el DailyStreak, suma uno en cada campo del dia.
+
+### Logica para llevar la cuenta de los dias en la racha de lectura
+
+1. Obtener el dia de hoy
+2. Obtener el dia de ayer
+
+IF AYER ES TRUE
+    SUMA 1 AL DIA DE HOY
+ELSE
+    REINICIA EL CONTADOR
+
+PERO LOS DOMINGOS LOS DIAS SE VUELVEN FALSE, ASI QUE SE PERDERIA LA RACHA
+
+
+##### La logica para registar el dia de hoy y monstrar en el DailyStreak
+
+TimerProvider.jsx
+
+CONST  todayIs = new Date().getDay(); //  El dia actual de 0 a 6, domingo inica con 0
+
+IF timerComplete > 0
+    setTodayIS(todayIs)
+
+    No deberia guardarse en el localStorage?
+
+switch (todayIs) {
+        case 0:
+            setTimerComplete(1);
+            break;
+        case 1:
+            setTimerComplete(2);
+            break;
+        case 2:
+            setTimerComplete(3);
+            break;
+        case 3:
+            setTimerComplete(4);
+            break;
+        case 4:
+            setTimerComplete(5);
+            break;
+        case 5:
+            setTimerComplete(6);
+            break;
+        case 6:
+            setTimerComplete(7);
+            break;
+    }
+    
+COMO GUARDAR EL DIA CHECK EN EL localStorage?
+

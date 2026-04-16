@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+@theme {
+
+  /* ===== COLORS ===== */
+
+  --color-primary: #7091AD;
+  --color-secundary: #F3BB5B;
+  --color-background-a: #5A636C;
+  --color-background-b: #525B65;
+  --color-white-a: #E9E9E9;
+  --color-white-b: #F5F5F5;
+  --color-black-a: #2F2F30;
+
+  /* ===== FONTS ===== */
+
+  --font-nsdisplayblack: 'Noto Sans Display Black', sans-serif;
+  --font-nsbold: 'Noto Sans Bold', sans-serif;
+  --font-nsmedium: 'Noto Sans Medium', sans-serif;
+  --font-nsextrabold: 'Noto ExtraBold', sans-serif;
+  --font-nsitalic: 'Noto Sans Italic', sans-serif;
+
+  /* ===== TEXT ===== */
+
+  --text-titlepage: 22px;
+  --text-h1: 16px;
+  --text-btn: 20px;
+  --text-daily: 92px;
+  --text-day: 22px;
+  --text-dailysub: 22px;
+
+  /* ===== SHADOW EFECT ===== */
+
+  --shadow-general: -3px 3px 3.8px 0px rgba(0, 0, 0, 0.1);
+  --shadow-toolbar: 0px -3px 2.7px 1px rgba(0, 0, 0, 0.03);
+}
+
+@layer base {
+  body {
+    @apply min-h-screen m-0;
+  }
+}
+
+/* ===== LAS FUENTES ===== */
+
+@font-face {
+  font-family: 'Noto Sans Display Black';
+  src: url('./assets/fonts/NotoSansDisplay-Black.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Noto Sans Bold';
+  src: url('./assets/fonts/NotoSans-Bold.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Noto Sans Medium';
+  src: url('./assets/fonts/NotoSans-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Noto ExtraBold';
+  src: url('./assets/fonts/NotoSans-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Noto Sans Italic';
+  src: url('./assets/fonts/NotoSans-Italic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* ===== FICHA DE RACHA ===== */
+.cardStreak {
+  width: 100%;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #1a1a1a;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+.streak-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  /*gap: calc(var(--spacing) * 5);*/
+}
+
+/* ===== IMG PORTADA LIBRO ===== */
+.book-card {
+  width: 100%;
+  position: relative;
+}
+
+.book-card::before {
+  content: "";
+  display: block;
+  padding-bottom: 146.68%;
+  /*  Calculado: (1502 / 1024) * 100 */
+}
+
+.book-card>* {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ===== ESTILO BOTONES =====
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.button-outline {
+  background: none;
+  border: 1px solid white;
+}
+
+.buttonplus {
+  border-radius: 100%;
+  width: 40px;
+  height: 40px;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  font-size: 30px;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}  */
