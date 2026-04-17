@@ -38,5 +38,11 @@ This document contains the rules and guidelines for developing and maintaining t
 *   **Logging**: Prefer using descriptive `console.log` or `console.error` for easy debugging, but clean them up before pushing code to production.
 *   **Styling**: Follow the configured ESLint rules and use TailwindCSS utility classes for styling.
 
+## Explanation of Changes
+
+- Always provide a detailed explanation for any code modified or created.
+- Keep explanations direct and simple.
+- Use analogies if necessary.
+
 ---
 *Note: This file must be read by the AI at the start of each work session to align expectations.*
