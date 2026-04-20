@@ -26,6 +26,11 @@ This document contains the rules and guidelines for developing and maintaining t
     *   Ensure the code is testable (avoid hidden dependencies, try to keep components pure when possible).
     *   Use `Jest` as the testing standard.
 
+5.  **Strict Adherence**:
+    *   If the user provides a specific instruction for code, follow it to the letter.
+    *   Do not invent or add extra features, 'premium' styles, or unnecessary refactors unless explicitly requested.
+
+
 ## 🛠️ Technical Context of the Project
 
 *   **Language**: React
