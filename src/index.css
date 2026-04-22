@@ -4,15 +4,15 @@
 
   /* ===== COLORS ===== */
 
-  --color-primary: #7091AD;
-  --color-secundary: #F3BB5B;
-  --color-background-a: #5A636C;
-  --color-background-b: #525B65;
+  --color-primary: #3e5c75;
+  --color-secundary: #d39e44;
+  --color-background-a: #1c1d1d;
+  --color-background-b: #292d31;
   --color-white-a: #E9E9E9;
   --color-white-b: #F5F5F5;
   --color-black-a: #2F2F30;
 
-  /* ===== FONTS ===== */
+  /* ===== FONTS ===== bg a 5A636C bg b 525B65 primary  7091AD secundary F3BB5B */
 
   --font-nsdisplayblack: 'Noto Sans Display Black', sans-serif;
   --font-nsbold: 'Noto Sans Bold', sans-serif;
