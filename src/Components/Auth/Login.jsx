@@ -1,72 +1,19 @@
 import { useAuth } from '../Context/AuthProvider'
 import readingHabitImg from '../../assets/img/habito_lectura.webp'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
+import DotBackground from './DotBackground'
 
 const Login = () => {
     const { signInWithGoogle } = useAuth()
     const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 640)
-    const canvasRef = useRef(null)
-    const mousePos = useRef({ x: -1000, y: -1000 })
 
     useEffect(() => {
         const handleResize = () => {
             setIsDesktop(window.innerWidth >= 640)
-            if (canvasRef.current) {
-                canvasRef.current.width = window.innerWidth
-                canvasRef.current.height = window.innerHeight
-            }
-        }
-
-        const handleMouseMove = (e) => {
-            mousePos.current = { x: e.clientX, y: e.clientY }
         }
 
         window.addEventListener('resize', handleResize)
-        window.addEventListener('mousemove', handleMouseMove)
-        handleResize()
-
-        const canvas = canvasRef.current
-        const ctx = canvas.getContext('2d')
-        let animationFrameId
-
-        const draw = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height)
-            ctx.fillStyle = '#808790'
-
-            const gap = 10
-            const radius = 0.5
-            const attractionRange = 80
-            const attractionForce = 0.15
-
-            for (let x = 0; x < canvas.width; x += gap) {
-                for (let y = 0; y < canvas.height; y += gap) {
-                    let dx = mousePos.current.x - x
-                    let dy = mousePos.current.y - y
-                    let dist = Math.sqrt(dx * dx + dy * dy)
-
-                    let moveX = 0
-                    let moveY = 0
-
-                    if (dist < attractionRange) {
-                        moveX = dx * (1 - dist / attractionRange) * attractionForce
-                        moveY = dy * (1 - dist / attractionRange) * attractionForce
-                    }
-
-                    ctx.beginPath()
-                    ctx.arc(x + moveX, y + moveY, radius, 0, Math.PI * 2)
-                    ctx.fill()
-                }
-            }
-            animationFrameId = requestAnimationFrame(draw)
-        }
-
-        draw()
-
-        return () => {
-            window.removeEventListener('resize', handleResize)
-            window.removeEventListener('mousemove', handleMouseMove)
-            cancelAnimationFrame(animationFrameId)
-        }
+        return () => window.removeEventListener('resize', handleResize)
     }, [])
 
     const textInform = (
@@ -81,11 +28,7 @@ const Login = () => {
 
     return (
         <div className="relative min-h-screen bg-background-a overflow-x-hidden">
-            <canvas
-                ref={canvasRef}
-                className="fixed top-0 left-0 pointer-events-none z-0"
-                style={{ opacity: 0.6 }}
-            />
+            <DotBackground />
 
             <div className="relative z-10">
                 <div className='mx-auto container'>
@@ -115,6 +58,7 @@ const Login = () => {
                         </div>
                     </div>
                 </div>
+
                 <div className='container mx-auto px-2 my-10'>
                     <div className='grid sm:grid-cols-2 grid-cols-1'>
                         {textInform}
@@ -122,25 +66,34 @@ const Login = () => {
                     </div>
                     <div className='grid sm:grid-cols-2 grid-cols-1 mt-10'>
                         {isDesktop ? (
-                            <>
-                                {imgSEO}
-                                {textInform}
-                            </>
+                            <>{imgSEO}{textInform}</>
                         ) : (
-                            <>
-                                {textInform}
-                                {imgSEO}
-                            </>
+                            <>{textInform}{imgSEO}</>
                         )}
                     </div>
                 </div>
-                <div className='container mx-auto'>
-                    <div className="min-h-screen flex flex-col items-center justify-center px-4 relative overflow-hidden">
-                        <div className="absolute bottom-8 left-0 w-full text-center">
-                            <span className="text-[12px] text-white-a opacity-30 font-nsdisplayblack tracking-widest uppercase">
-                                <a href="https://www.moises-script.cl/">Desarrollado por Moises-Script</a>
-                            </span>
+
+                <div className='container-full mx-auto border-t border-t-white-a py-7'>
+                    <div className='container mx-auto gird grid-cols-1'>
+                        <h2 className='text-white-a text-day text-center'>Ventajas</h2>
+                    </div>
+                    <div className='container mx-auto grid sm:grid-cols-3 grid-cols-1 gap-8 pt-7'>
+                        <div>
+                            <img src={readingHabitImg} alt="Img 1" className='rounded-md' />
+                            <p className='text-white-a text-day mt-2'>Habitos de lectura, entra en la app para que puedas cumplir tus metas de lectura</p>
                         </div>
+                        <div>
+                            <img src={readingHabitImg} alt="Img 2" className='rounded-md' />
+                            <p className='text-white-a text-day mt-2'>Habitos de lectura, entra en la app para que puedas cumplir tus metas de lectura</p>
+                        </div>
+                        <div>
+                            <img src={readingHabitImg} alt="Img 3" className='rounded-md' />
+                            <p className='text-white-a text-day mt-2'>Habitos de lectura, entra en la app para que puedas cumplir tus metas de lectura</p>
+                        </div>
+                    </div>
+                    <div className='container mx-auto gird grid-cols-1 pt-7'>
+                        <h2 className='text-white-a text-day text-center'>Contexto</h2>
+                        <p className='text-white-a text-day mt-2 text-center'>Habitos de lectura, entra en la app para que puedas cumplir tus metas de lectura</p>
                     </div>
                 </div>
             </div>
