@@ -2,6 +2,7 @@ import { useAuth } from '../Context/AuthProvider'
 import readingHabitImg from '../../assets/img/habito_lectura.webp'
 import { useState, useEffect } from 'react'
 import DotBackground from './DotBackground'
+import Footer from '../Footer/Footer'
 
 const Login = () => {
     const { signInWithGoogle } = useAuth()
@@ -16,9 +17,15 @@ const Login = () => {
         return () => window.removeEventListener('resize', handleResize)
     }, [])
 
-    const textInform = (
+    const textInform1 = (
         <p className='font-nsmedium text-white-a text-h1 flex items-center px-3'>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum explicabo libero aut illo eius possimus animi tempore quas nemo dolorem atque.
+            Tu biblioteca personal, siempre contigo. Organiza tus libros, lleva el control de lo que lees y descubre cuánto puedes avanzar cuando la constancia se vuelve un hábito.
+        </p>
+    )
+
+    const textInform2 = (
+        <p className='font-nsmedium text-white-a text-h1 flex items-center px-3'>
+            Registra tu lectura día a día. Con el tracking diario de MegaBook, cada página cuenta y cada sesión te acerca más a convertir la lectura en tu mejor hábito.
         </p>
     )
 
@@ -44,7 +51,7 @@ const Login = () => {
                         >
 
                             <div className='h-full grid grid-cols-1'>
-                                <h1 className='text-white-a font-nsdisplayblack text-btn p-4 flex items-end text-center'>Habitos de lectura, entra en la app para que puedas cumplir tus metas de lectura</h1>
+                                <h1 className='text-white-a font-nsdisplayblack text-tittlelogin p-4 flex items-end justify-center text-center'>Tu próximo gran hábito empieza con una página. Entra y comienza hoy.</h1>
                                 <div className="flex justify-center">
                                     <button
                                         onClick={signInWithGoogle}
@@ -61,14 +68,14 @@ const Login = () => {
 
                 <div className='container mx-auto px-2 my-10'>
                     <div className='grid sm:grid-cols-2 grid-cols-1'>
-                        {textInform}
+                        {textInform1}
                         {imgSEO}
                     </div>
                     <div className='grid sm:grid-cols-2 grid-cols-1 mt-10'>
                         {isDesktop ? (
-                            <>{imgSEO}{textInform}</>
+                            <>{imgSEO}{textInform2}</>
                         ) : (
-                            <>{textInform}{imgSEO}</>
+                            <>{textInform2}{imgSEO}</>
                         )}
                     </div>
                 </div>
@@ -80,22 +87,23 @@ const Login = () => {
                     <div className='container mx-auto grid sm:grid-cols-3 grid-cols-1 gap-8 pt-7'>
                         <div>
                             <img src={readingHabitImg} alt="Img 1" className='rounded-md' />
-                            <p className='text-white-a text-day mt-2'>Habitos de lectura, entra en la app para que puedas cumplir tus metas de lectura</p>
+                            <p className='text-white-a text-day mt-2'>Leer 15 minutos al día transforma tu mente. MegaBook te ayuda a construir ese hábito sin excusas.</p>
                         </div>
                         <div>
                             <img src={readingHabitImg} alt="Img 2" className='rounded-md' />
-                            <p className='text-white-a text-day mt-2'>Habitos de lectura, entra en la app para que puedas cumplir tus metas de lectura</p>
+                            <p className='text-white-a text-day mt-2'>Visualiza tu progreso con rachas diarias. Saber que llevas 30 días seguidos es la mejor motivación para no parar.</p>
                         </div>
                         <div>
                             <img src={readingHabitImg} alt="Img 3" className='rounded-md' />
-                            <p className='text-white-a text-day mt-2'>Habitos de lectura, entra en la app para que puedas cumplir tus metas de lectura</p>
+                            <p className='text-white-a text-day mt-2'>Tu biblioteca crece contigo. Guarda cada libro que terminas y mira cómo se construye tu historia como lector.</p>
                         </div>
                     </div>
                     <div className='container mx-auto gird grid-cols-1 pt-7'>
                         <h2 className='text-white-a text-day text-center'>Contexto</h2>
-                        <p className='text-white-a text-day mt-2 text-center'>Habitos de lectura, entra en la app para que puedas cumplir tus metas de lectura</p>
+                        <p className='text-white-a text-day mt-2 text-center'>MegaBook es un producto mínimo viable (PMV) en fase de validación. Por ahora es completamente gratuito mientras medimos el interés y los hábitos de lectura de nuestra comunidad. Tu uso nos ayuda a decidir el futuro de esta herramienta como aplicación oficial.</p>
                     </div>
                 </div>
+                <Footer />
             </div>
         </div>
     )
