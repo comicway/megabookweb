@@ -43,7 +43,7 @@ Estamos trabajando en estadísticas visuales, niveles de lectura y sincronizaci�
 **Moises Contreras** 
 
 🌐 [moises-script.cl](https://www.moises-script.cl/)  
-📧 [info@moises-script.cl](mailto:info@moises-script.cl)  
+📧 [moiselias7@gmail.com](mailto:moiselias7@gmail.com)  
 📸 [Instagram](https://www.instagram.com/moises_script/)
 🧵 [Threads](https://www.threads.com/@moises.script)
 

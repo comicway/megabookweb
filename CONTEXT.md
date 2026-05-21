@@ -36,9 +36,9 @@ According to the repository's current structure (based on Vite + React + Tailwin
 
 To achieve the MVP goal, the following development milestones will take priority:
 
-- [ ] **Deploy:** Deploy the MVP to production using Vercel.
+- [x] **Deploy:** Deploy the MVP to production using Vercel.
 
-- [ ] **Auth:** Integrate an identity provider (e.g., Firebase, Supabase auth) for "Login with Google".
+- [x] **Auth:** Integrate an identity provider (e.g., Firebase, Supabase auth) for "Login with Google".
 
 - [ ] **Cloud/Backend:** Develop an API in **FastAPI** connected to a centralized database to save persistent information (streaks, logs, users); and include administrative endpoints to easily visualize these retention metrics.
 
