@@ -26,6 +26,10 @@ This document contains the rules and guidelines for developing and maintaining t
     *   Ensure the code is testable (avoid hidden dependencies, try to keep components pure when possible).
     *   Use `Jest` as the testing standard.
 
+5.  **Strict Adherence**:
+    *   If the user provides a specific instruction for code, follow it to the letter.
+    *   Do not invent or add extra features, 'premium' styles, or unnecessary refactors unless explicitly requested.
+
 ## 🛠️ Technical Context of the Project
 
 *   **Language**: React
@@ -37,6 +41,12 @@ This document contains the rules and guidelines for developing and maintaining t
 *   **Environment Variables**: Never hardcode credentials. Always use `import.meta.env` (Vite's standard) to access environment variables.
 *   **Logging**: Prefer using descriptive `console.log` or `console.error` for easy debugging, but clean them up before pushing code to production.
 *   **Styling**: Follow the configured ESLint rules and use TailwindCSS utility classes for styling.
+
+## Explanation of Changes
+
+- Always provide a detailed explanation for any code modified or created.
+- Keep explanations direct and simple.
+- Use analogies if necessary.
 
 ---
 *Note: This file must be read by the AI at the start of each work session to align expectations.*
