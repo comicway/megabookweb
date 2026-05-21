@@ -2,10 +2,14 @@ import { createContext, useEffect } from 'react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { dayNames, getWeekNumber, getYesterdayInfo } from '../../logic/dateUtils';
 import { calculateStreak } from '../../logic/streak';
+import { useAuth } from './AuthProvider';
+import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../logic/firebase';
 
 export const TimerContext = createContext();
 
 export const TimerProvider = ({ children }) => {
+    const { user } = useAuth();
     const today = new Date();
     const currentWeek = getWeekNumber(today);
     const todayIs = today.getDay();
@@ -15,6 +19,7 @@ export const TimerProvider = ({ children }) => {
     const [timerComplete, setTimerComplete] = useLocalStorage('timerKey', 0);
     const [lastTimerCount, setLastTimerCount] = useLocalStorage('lastTimerKey', 0);
     const [totalStreak, setTotalStreak] = useLocalStorage('totalStreak', 0);
+    const [maxStreak, setMaxStreak] = useLocalStorage('maxStreak', 0);
     const [lastWeek, setLastWeek] = useLocalStorage('LastWeek', 0);
     const [wasSaturdaySuccessful, setWasSaturdaySuccessful] = useLocalStorage('wasSaturdaySuccessful', false);
 
@@ -23,6 +28,26 @@ export const TimerProvider = ({ children }) => {
         sunday: false, monday: false, tuesday: false, wednesday: false,
         thursday: false, friday: false, saturday: false
     });
+
+    // Sincronización inicial desde Firestore
+    useEffect(() => {
+        if (user) {
+            const loadFirestoreData = async () => {
+                try {
+                    const userRef = doc(db, 'users', user.uid);
+                    const userSnap = await getDoc(userRef);
+                    if (userSnap.exists()) {
+                        const data = userSnap.data();
+                        if (data.total_streak !== undefined) setTotalStreak(data.total_streak);
+                        if (data.max_streak !== undefined) setMaxStreak(data.max_streak);
+                    }
+                } catch (error) {
+                    console.error("Error al cargar datos desde Firestore:", error.message);
+                }
+            };
+            loadFirestoreData();
+        }
+    }, [user]);
 
     // Sincronización de cambio de semana
     useEffect(() => {
@@ -49,7 +74,27 @@ export const TimerProvider = ({ children }) => {
             const { name, isAcrossWeek } = getYesterdayInfo(todayIs);
             const yesterdayWasSuccessful = isAcrossWeek ? wasSaturdaySuccessful : days[name];
 
-            setTotalStreak(yesterdayWasSuccessful ? totalStreak + 1 : 1);
+            setTotalStreak(prevTotal => {
+                const newTotal = yesterdayWasSuccessful ? prevTotal + 1 : 1;
+                
+                setMaxStreak(prevMax => {
+                    const newMax = Math.max(newTotal, prevMax);
+                    
+                    if (user) {
+                        const userRef = doc(db, 'users', user.uid);
+                        updateDoc(userRef, {
+                            last_session: serverTimestamp(),
+                            total_streak: newTotal,
+                            max_streak: newMax
+                        }).catch(error => {
+                            console.error("Error al guardar racha en Firestore:", error.message);
+                        });
+                    }
+                    return newMax;
+                });
+                
+                return newTotal;
+            });
         }
     }, [timerComplete]);
 
@@ -63,6 +108,7 @@ export const TimerProvider = ({ children }) => {
             timerComplete, setTimerComplete,
             days, setDays,
             totalStreak, setTotalStreak,
+            maxStreak, setMaxStreak,
             liveStreak
         }}>
             {children}

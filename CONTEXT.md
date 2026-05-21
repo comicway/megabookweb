@@ -40,7 +40,7 @@ To achieve the MVP goal, the following development milestones will take priority
 
 - [x] **Auth:** Integrate an identity provider (e.g., Firebase, Supabase auth) for "Login with Google".
 
-- [ ] **Cloud/Backend:** Develop an API in **FastAPI** connected to a centralized database to save persistent information (streaks, logs, users); and include administrative endpoints to easily visualize these retention metrics.
+- [x] **Cloud/Backend:** Integrate **Firebase Firestore** as a centralized database to save persistent user information (streaks, last session timestamp, and users) directly from the client. Metrics are visualized in Firebase Console.
 
 - [ ] **Search:** Scale the current Google Books API integration using a more robust token/plan that can handle massive simultaneous requests from users without being blocked.
 

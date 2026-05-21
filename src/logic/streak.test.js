@@ -11,5 +11,5 @@ test('dias de racha en true', () => {
         5: false, // Viernes
         6: false // Sabado
     };
-    expect(calculateStreak(days)).toBe(2);
+    expect(calculateStreak(days, 1)).toBe(2);
 });

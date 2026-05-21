@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { auth } from '../../logic/firebase'
+import { auth, db } from '../../logic/firebase'
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth'
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
 
 const AuthContext = createContext({})
 
@@ -22,8 +23,23 @@ export const AuthProvider = ({ children }) => {
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider()
     try {
-      await signInWithPopup(auth, provider)
-      // Redirection logic is handled by ProtectedRoute automatically
+      const result = await signInWithPopup(auth, provider)
+      const loggedUser = result.user
+
+      // Sincronizar usuario con Firestore
+      const userRef = doc(db, 'users', loggedUser.uid)
+      const userSnap = await getDoc(userRef)
+
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          email: loggedUser.email,
+          name: loggedUser.displayName,
+          created_at: serverTimestamp(),
+          total_streak: 0,
+          max_streak: 0,
+          last_session: null
+        })
+      }
     } catch (error) {
       console.error('Error logging in with Firebase Google SSO:', error.message)
     }
