@@ -1,0 +1,18 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno (NUNCA subir al repositorio)
+.env
+.env.local
+.env.*.local
+
+# Build de producción
+dist/
+
+# Archivos de sistema
+.DS_Store
+*.log
+
+# Cache de Vite
+.vite/
+node_modules/.vite/

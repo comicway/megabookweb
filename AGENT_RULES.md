@@ -30,7 +30,6 @@ This document contains the rules and guidelines for developing and maintaining t
     *   If the user provides a specific instruction for code, follow it to the letter.
     *   Do not invent or add extra features, 'premium' styles, or unnecessary refactors unless explicitly requested.
 
-
 ## 🛠️ Technical Context of the Project
 
 *   **Language**: React
