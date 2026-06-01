@@ -5,8 +5,8 @@ MegaBook es un proyecto en constante evolución. Estas son las funcionalidades p
 ## Fase 1: Estabilización y Pulido (Próximamente)
 
 - [ ] **Mover API Key a .env**: Mejorar la seguridad extrayendo la clave de Google Books del código fuente.
-- [ ] **Persistencia de Libros**: Asegurar que la función "Cargar" en el BookLog sea automática o más intuitiva.
-- [ ] **Feedback Animado**: Añadir micro-interacciones cuando se completa un racha (ej: confeti).
+- [x] **Persistencia de Libros en la Nube**: La biblioteca personal (`book_ids`) se sincroniza automáticamente con Firestore. El usuario recupera sus libros en cualquier dispositivo.
+- [ ] **Feedback Animado**: Añadir micro-interacciones cuando se completa una racha (ej: confeti).
 
 ## Fase 2: Gamificación Avanzada
 
@@ -16,7 +16,7 @@ MegaBook es un proyecto en constante evolución. Estas son las funcionalidades p
 
 ## Fase 3: Funcionalidades Sociales y Multi-dispositivo
 
-- [ ] **Sincronización Cloud**: Opción de guardar el progreso en una base de datos (Supabase o Firebase) en lugar de solo `localStorage`.
+- [x] **Sincronización Cloud**: La biblioteca de libros y las rachas se sincronizan con Firestore. El progreso del usuario se recupera automáticamente en cualquier dispositivo.
 - [ ] **Compartir Logros**: Generar una imagen de la racha actual para compartir en redes sociales.
 
 ---

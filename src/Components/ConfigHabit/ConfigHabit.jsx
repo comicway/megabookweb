@@ -1,6 +1,9 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
+import { useAuth } from '../Context/AuthProvider';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../../logic/firebase';
 
 const validate = (values) => {
     const errors = {};
@@ -14,20 +17,33 @@ const validate = (values) => {
 
 const ConfigHabit = () => {
 
+    const { user } = useAuth();
     const [successMessage, setSuccessMessage] = useState('');
-
-    const [formuHabit, setFormuHabit] = useState(() => {
-
-        try {
-            const habitGuardado = localStorage.getItem('habitData');
-            return habitGuardado ? JSON.parse(habitGuardado) : [];
-        } catch (error) {
-            console.error("¡Error al parsear! El JSON estaba corrupto:", error);
-            return [];
-        }
+    const [initialData, setInitialData] = useState({
+        habitpre: '',
+        time: '',
+        repeatdate: '',
     });
 
-    console.log("Lo que esta en el LocalHabit:", formuHabit);
+    useEffect(() => {
+        const fetchConfig = async () => {
+            if (user) {
+                try {
+                    const userRef = doc(db, 'users', user.uid);
+                    const userSnap = await getDoc(userRef);
+                    if (userSnap.exists()) {
+                        const data = userSnap.data();
+                        if (data.habit_config) {
+                            setInitialData(data.habit_config);
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error fetching habit config from Firestore:", error);
+                }
+            }
+        };
+        fetchConfig();
+    }, [user]);
 
     return (
         <>
@@ -40,26 +56,24 @@ const ConfigHabit = () => {
                 </div>
                 <div className='grid gird-cols-1'>
                     <Formik
-                        initialValues={{
-                            habitpre: '',
-                            time: '',
-                            repeatdate: '',
-                        }}
+                        enableReinitialize={true}
+                        initialValues={initialData}
                         validate={validate}
-                        onSubmit={(values, { setSubmitting, resetForm }) => {
-                            setTimeout(() => {
+                        onSubmit={async (values, { setSubmitting }) => {
+                            if (user) {
                                 try {
-                                    const jsonData = JSON.stringify(values);
-                                    localStorage.setItem('habitData', jsonData);
-                                    setSuccessMessage('Configurado pre habito');
-                                    resetForm();
+                                    const userRef = doc(db, 'users', user.uid);
+                                    await updateDoc(userRef, { habit_config: values });
+                                    setSuccessMessage('Configurado exitosamente en la nube');
                                 } catch (error) {
-                                    console.error("No se puede guardar en localStorage", error);
+                                    console.error("Error guardando en Firestore:", error);
                                     setSuccessMessage("Hubo un error al guardar los datos");
                                 }
-                                setSubmitting(false);
-                                setTimeout(() => setSuccessMessage(''), 5000);
-                            }, 1000);
+                            } else {
+                                setSuccessMessage("Debes iniciar sesión para guardar");
+                            }
+                            setSubmitting(false);
+                            setTimeout(() => setSuccessMessage(''), 5000);
                         }}
                     >
                         {({ isSubmitting, isValid }) => (
@@ -113,11 +127,6 @@ const ConfigHabit = () => {
                                 <div className="grid grid-cols-1">
                                     <span className="text-[14px] text-white-a font-nsitalic mt-2">Elige con qué frecuencia deseas recibir tus recordatorios.</span>
                                 </div>
-                                {/*<div className='grid grid-cols-1'>
-                            <div className='flex justify-end'>
-                                <div className='buttonplus'>+</div>
-                            </div>
-                        </div>*/}
                                 <ErrorMessage name="habitpre" component="div" />
                                 <div className='flex justify-center'>
                                     <button className="w-full mt-6 bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2" type="submit" disabled={isSubmitting || !isValid} >

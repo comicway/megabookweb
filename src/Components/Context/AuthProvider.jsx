@@ -37,7 +37,9 @@ export const AuthProvider = ({ children }) => {
           created_at: serverTimestamp(),
           total_streak: 0,
           max_streak: 0,
-          last_session: null
+          last_session: null,
+          book_ids: [],
+          habit_config: null
         })
       }
     } catch (error) {

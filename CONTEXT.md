@@ -46,4 +46,6 @@ To achieve the MVP goal, the following development milestones will take priority
 
 - [ ] **Tracking UI:** Instrument events in React and develop a custom endpoint in the backend (FastAPI) to log telemetry (number of clicks on buttons/books, action time, and screens viewed) without depending on external services.
 
+Promt: En este punto, ya que no se esta usando un desarollo con FastAPI, colocar una etiqueta unica en cada boton, imput, check de la aplicacion, que el nombre de la etiqueta sea facil de reconocer segun su ubicacion en la aplicacion y la funcion que hace, el desarrollo consiste en que registre cuando el usuario haga clic y calcule el tiempo que tardo entre hacer clic entre un elemento etiquetado a otro, la idea es calcular la eficacia, esta data debe estar en Firebase, dentro de la base de datos de cada usuario
+
 - [ ] **Push Notifications (Backend):** Implement workers/tasks in FastAPI that query the user's configuration (`ConfigHabit.jsx`) in the database and trigger Web Push notifications to their browser.
