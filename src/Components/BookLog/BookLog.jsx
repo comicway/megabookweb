@@ -1,92 +1,76 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
-
-/* Inicio rescatar datos de la LocalStorage */
-
-const CLAVE_STORAGE = 'miConfiguracionRadio';
+import { useAuth } from '../Context/AuthProvider';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../logic/firebase';
 
 const BookLog = () => {
 
-    const [localBook, setlocalBook] = useState(() => {
+    const { user } = useAuth();
 
-        try {
-            const stringGuardado = localStorage.getItem(CLAVE_STORAGE);
-
-            if (stringGuardado === null) {
-                return [];
-            }
-
-            return JSON.parse(stringGuardado);
-
-        } catch (error) {
-            console.error("Error al leer localStorage", error);
-            return [];
-        }
-    });
-
-    console.log('Informacion en el locaStorage:', localBook);
-
-    /* Inicio sacar datos del Google Books */
-
+    const [localBook, setlocalBook] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [query, setQuery] = useState(localBook);
-    const [books, setBooks] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
 
-        if (!query) {
-            setLoading(false);
-            return;  /* Detiene todo si no hay nada que buscar */
-        }
+        const loadAndFetch = async () => {
 
-        const fetchBookData = async () => {
+            let ids = [];
+
+            if (user) {
+                try {
+                    const userSnap = await getDoc(doc(db, 'users', user.uid));
+                    if (userSnap.exists()) {
+                        ids = userSnap.data().book_ids || [];
+                    }
+                } catch (err) {
+                    console.error("Error loading book_ids from Firestore:", err.message);
+                }
+            }
+
+            console.log('IDs a consultar:', ids);
+
+            // Step 3: Fetch from Google Books API for each ID
+            if (!ids || ids.length === 0) {
+                setlocalBook([]);
+                setLoading(false);
+                return;
+            }
 
             setLoading(true);
 
             const apiKey = 'AIzaSyBzpG3HDLwYjHSYiEPJxgKVTyOizFL33cY';
-            const encodedQuery = encodeURIComponent(query);
-
             const librosEncontrados = [];
 
             try {
 
-                for (const id of query) {
+                for (const id of ids) {
 
                     const apiUrl = `https://www.googleapis.com/books/v1/volumes/${id}?key=${apiKey}`;
 
-                    const response = await fetch(apiUrl)
-
-                    /* console.log("Mira el objeto response:", response);
-                    console.log("¿Es un array?:", Array.isArray(response)); */
-
+                    const response = await fetch(apiUrl);
                     const data = await response.json();
 
                     librosEncontrados.push(data);
                 }
 
-                setlocalBook(librosEncontrados);
-
-                /*if (!librosEncontrados.ok) {
-                    throw new Error('Error al conectar con Google Books');
-                }*/
-
                 if (librosEncontrados.length > 0) {
                     setlocalBook(librosEncontrados);
                 } else {
-                    throw new Error('No se encontraron libros con esos IDs.')
+                    throw new Error('No se encontraron libros con esos IDs.');
                 }
-                return librosEncontrados;
+
             } catch (err) {
                 setError("setError catch: " + err.message);
             } finally {
                 setLoading(false);
             }
-
         };
-        fetchBookData();
 
-    }, [query]);
+        loadAndFetch();
+
+    }, [user]);
 
     if (error) {
         return <div>Error - {error}</div>;

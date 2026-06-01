@@ -77,21 +77,51 @@ export const TimerProvider = ({ children }) => {
             setTotalStreak(prevTotal => {
                 const newTotal = yesterdayWasSuccessful ? prevTotal + 1 : 1;
                 
-                setMaxStreak(prevMax => {
-                    const newMax = Math.max(newTotal, prevMax);
-                    
+                const syncMaxStreak = async () => {
                     if (user) {
-                        const userRef = doc(db, 'users', user.uid);
-                        updateDoc(userRef, {
-                            last_session: serverTimestamp(),
-                            total_streak: newTotal,
-                            max_streak: newMax
-                        }).catch(error => {
-                            console.error("Error al guardar racha en Firestore:", error.message);
-                        });
+                        try {
+                            const userRef = doc(db, 'users', user.uid);
+                            const userSnap = await getDoc(userRef);
+                            
+                            let dbMax = 0;
+                            if (userSnap.exists()) {
+                                dbMax = userSnap.data().max_streak || 0;
+                            }
+                            
+                            setMaxStreak(prevMax => {
+                                const finalMax = Math.max(newTotal, dbMax, prevMax);
+                                
+                                updateDoc(userRef, {
+                                    last_session: serverTimestamp(),
+                                    total_streak: newTotal,
+                                    max_streak: finalMax
+                                }).catch(error => {
+                                    console.error("Error al guardar racha en Firestore:", error.message);
+                                });
+                                
+                                return finalMax;
+                            });
+                        } catch (error) {
+                            console.error("Error consultando max_streak real (posiblemente offline):", error.message);
+                            // Fallback offline: actualiza localmente y encola en Firestore
+                            setMaxStreak(prevMax => {
+                                const finalMax = Math.max(newTotal, prevMax);
+                                const userRef = doc(db, 'users', user.uid);
+                                updateDoc(userRef, {
+                                    last_session: serverTimestamp(),
+                                    total_streak: newTotal,
+                                    max_streak: finalMax
+                                }).catch(err => console.error("Error al encolar actualización offline:", err.message));
+                                return finalMax;
+                            });
+                        }
+                    } else {
+                        // Usuario no logueado
+                        setMaxStreak(prevMax => Math.max(newTotal, prevMax));
                     }
-                    return newMax;
-                });
+                };
+                
+                syncMaxStreak();
                 
                 return newTotal;
             });

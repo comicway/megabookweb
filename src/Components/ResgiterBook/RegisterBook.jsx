@@ -1,5 +1,8 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useState, useEffect } from 'react';
+import { useAuth } from '../Context/AuthProvider';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../../logic/firebase';
 
 /* Validacion del buscador de libros*/
 
@@ -14,6 +17,8 @@ const validate = (values) => {
 
 const RegisterBook = () => {
 
+    const { user } = useAuth();
+
     const [query, setQuery] = useState(''); /* La informacion campo "Titulo del libro" */
 
     const [books, setBooks] = useState([]); /* Los datos del libro */
@@ -21,19 +26,34 @@ const RegisterBook = () => {
     const [error, setError] = useState(null);
     const [statusMessage, setStatusMessage] = useState('');
 
-
-    const STORAGE_KEY = 'miConfiguracionRadio';
-
     /* Captura los datos del input como array de ids */
-    const [inputValue, setInputValue] = useState(() => {
-        try {
-            const valorGuardado = localStorage.getItem(STORAGE_KEY);
-            return valorGuardado ? JSON.parse(valorGuardado) : [];
-        } catch (error) {
-            console.error("¡Error al parsear! El JSON estaba corrupto:", error);
-            return []; // asegurar siempre un array
+    const [inputValue, setInputValue] = useState([]);
+
+    /* Carga inicial de IDs directamente desde Firestore */
+    const loadBookIds = async () => {
+        if (!user) {
+            setInputValue([]);
+            return;
         }
-    });
+
+        try {
+            const userRef = doc(db, 'users', user.uid);
+            const userSnap = await getDoc(userRef);
+
+            if (userSnap.exists()) {
+                setInputValue(userSnap.data().book_ids || []);
+            } else {
+                setInputValue([]);
+            }
+        } catch (err) {
+            console.error("Error al cargar book_ids desde Firestore:", err.message);
+            setInputValue([]);
+        }
+    };
+
+    useEffect(() => {
+        loadBookIds();
+    }, [user]);
 
     /* Toggle para checkboxes: añade o quita el id del array */
     const handleChange = (e) => {
@@ -41,24 +61,26 @@ const RegisterBook = () => {
         setInputValue(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
     };
 
-    const [nuevoInput, setNuevoInput] = useState('');
-
-    useEffect(() => {
-
-
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(inputValue)); /*Prepara las cajas*/
-
-    }, [inputValue]);
-
-    const handleSave = (e) => {
-
+    const handleSave = async (e) => {
         e.preventDefault();
 
-        if (inputValue.length > 0) {
-            setStatusMessage('Agregado correctamente');
-
-        } else {
+        if (inputValue.length === 0) {
             setStatusMessage('Por favor, selecciona un libro');
+            setTimeout(() => setStatusMessage(''), 3000);
+            return;
+        }
+
+        if (user) {
+            try {
+                const userRef = doc(db, 'users', user.uid);
+                await updateDoc(userRef, { book_ids: inputValue });
+                setStatusMessage('Agregado correctamente a la nube');
+            } catch (err) {
+                console.error("Error al guardar book_ids en Firestore:", err.message);
+                setStatusMessage('Error al guardar en la nube');
+            }
+        } else {
+            setStatusMessage('Debes iniciar sesión para guardar');
         }
 
         setTimeout(() => setStatusMessage(''), 3000);

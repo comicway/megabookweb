@@ -23,7 +23,8 @@ Se eligió **Firestore** por sobre FastAPI + Cloud Run porque:
   ├── created_at: timestamp        ← cuándo se registró por primera vez
   ├── last_session: timestamp      ← última vez que completó una sesión de lectura
   ├── total_streak: 34             ← racha actual activa
-  └── max_streak: 34               ← racha máxima histórica (nunca baja)
+  ├── max_streak: 34               ← racha máxima histórica (nunca baja)
+  └── book_ids: ["abc123", "xyz789"] ← IDs de Google Books de la biblioteca personal
 ```
 
 ---

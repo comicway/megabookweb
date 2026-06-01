@@ -21,9 +21,12 @@ El motor de actividad principal de la aplicación.
 
 Biblioteca personal y visualización de progreso.
 
-- Se conecta a la **API de Google Books** para recuperar información detallada de los libros (portadas, títulos).
-- Mapea y muestra los libros guardados en el almacenamiento local (`miConfiguracionRadio`).
-- Presenta una cuadrícula intuitiva con las carátulas encontradas.
+- Se conecta a la **API de Google Books** para recuperar información detallada de los libros (portadas, títulos, autores).
+- Al montar, carga los IDs de libros con la siguiente prioridad:
+  1. Lee `localStorage` bajo la key `miConfiguracionRadio`.
+  2. Si está vacío y hay usuario autenticado, consulta Firestore (`/users/{uid}/book_ids`) e hidrata `localStorage`.
+- Presenta una cuadrícula con las portadas, títulos y autores de los libros encontrados.
+- Si Firestore no está disponible o el campo `book_ids` no existe en el documento, muestra la biblioteca vacía sin lanzar error.
 
 ## `ConfigBook.jsx`
 
@@ -38,7 +41,12 @@ Gestor de registros y búsqueda de libros.
 
 - Implementa un formulario de búsqueda (usando **Formik**) conectado directamente a Google Books.
 - Muestra los resultados de búsqueda con sus respectivas portadas.
-- Incluye un sistema de selección mediante checkboxes que permite al usuario agregar múltiples libros a su colección de forma rápida.
+- Incluye un sistema de selección mediante checkboxes que permite al usuario agregar múltiples libros a su colección.
+- Al montar, carga los IDs previamente guardados con la siguiente prioridad:
+  1. Lee `localStorage` bajo la key `miConfiguracionRadio`.
+  2. Si está vacío y hay usuario autenticado, consulta Firestore e hidrata `localStorage`.
+- Al hacer click en **"Agregar"**, guarda los IDs seleccionados en `localStorage` y, si hay usuario autenticado, los sincroniza con Firestore usando `updateDoc`. Los errores de Firestore se loguean sin bloquear la UX.
+- Si el usuario no está autenticado, solo usa `localStorage`.
 
 ## `ReadBook.jsx`
 
