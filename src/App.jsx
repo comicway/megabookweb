@@ -10,11 +10,14 @@ import HomePage from './Components/Home/Home'
 import ToolBar from './Components/ToolBar/ToolBar'
 import Login from './Components/Auth/Login'
 import ProtectedRoute from './Components/Auth/ProtectedRoute'
+import { useTracking } from './hooks/useTracking'
 
 function AppContent() {
   const [h1Router, setH1Router] = useState('Megabook');
   const location = useLocation();
   const { user, signOut } = useAuth();
+  
+  useTracking();
 
   const isLoginPage = location.pathname === '/login';
 
