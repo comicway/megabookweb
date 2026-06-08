@@ -153,6 +153,7 @@ const RegisterBook = () => {
                                     <Field className="w-full border border-white-a rounded h-[56px] bg-transparent px-[15px] text-h1 font-nsbold font-bold text-white-a outline-none" name="title" type="text" placeholder="Título del libro*"></Field>
                                     <button
                                         type="submit"
+                                        data-tracking-id="RegisterBook-BtnSearchIcon-Click"
                                         className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer p-1"
                                     >
                                         <svg
@@ -170,6 +171,7 @@ const RegisterBook = () => {
                                 <div className="flex justify-center">
                                     <button
                                         type="submit"
+                                        data-tracking-id="RegisterBook-BtnSearchFull-Click"
                                         className="w-full mt-3 bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2"
                                         disabled={loading}
                                     >
@@ -203,6 +205,7 @@ const RegisterBook = () => {
                                     />
                                     <label
                                         htmlFor={book.id}
+                                        data-tracking-id="RegisterBook-CheckBook-Click"
                                         className="block cursor-pointer border-[6px] border-transparent rounded-md peer-checked:border-secundary transition-all"
                                     >
                                         {book.volumeInfo.imageLinks?.thumbnail && (
@@ -216,7 +219,7 @@ const RegisterBook = () => {
                 </div>
                 <div className="grid grid-cols-1 mt-2">
                     <div className="flex justify-center">
-                        <button onClick={handleSave} className='w-full h-14 text-secundary font-nsbold font-bold rounded-full text-btn border border-secundary'>Agregar</button>
+                        <button onClick={handleSave} data-tracking-id="RegisterBook-BtnSave-Click" className='w-full h-14 text-secundary font-nsbold font-bold rounded-full text-btn border border-secundary'>Agregar</button>
                     </div>
                     {statusMessage && (
                         <div className="text-secundary flex justify-center font-nsitalic mt-2">

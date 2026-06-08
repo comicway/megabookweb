@@ -7,7 +7,7 @@ const ToolBar = () => {
                 <div className="container-fluid mx-auto">
                     <div className="grid grid-cols-3 bg-primary h-[74px] place-items-center">
                         <Link to="/">
-                            <button className=" text-white-b font-nsbold font-extrabold text-xs items-center flex flex-col justify-center">
+                            <button data-tracking-id="ToolBar-BtnHome-Click" className=" text-white-b font-nsbold font-extrabold text-xs items-center flex flex-col justify-center">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 -960 960 960"
@@ -19,7 +19,7 @@ const ToolBar = () => {
                             </button>
                         </Link>
                         <Link to="/registerbook">
-                            <button className=" text-white-b font-nsbold font-extrabold text-xs items-center flex flex-col justify-center">
+                            <button data-tracking-id="ToolBar-BtnAddBook-Click" className=" text-white-b font-nsbold font-extrabold text-xs items-center flex flex-col justify-center">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 -960 960 960"
@@ -31,7 +31,7 @@ const ToolBar = () => {
                             </button>
                         </Link>
                         <Link to="/confighabit">
-                            <button className=" text-white-b font-nsbold font-extrabold text-xs items-center flex flex-col justify-center">
+                            <button data-tracking-id="ToolBar-BtnHabit-Click" className=" text-white-b font-nsbold font-extrabold text-xs items-center flex flex-col justify-center">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 -960 960 960"

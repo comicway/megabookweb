@@ -79,7 +79,7 @@ const ConfigHabit = () => {
                         {({ isSubmitting, isValid }) => (
                             <Form>
                                 <div className='grid grid-cols-1 relative mt-3'>
-                                    <Field as="select" name="habitpre" id="habitpre" className="w-full border border-white-a rounded h-[56px] bg-transparent px-[15px] text-h1 font-nsbold font-bold text-white-a outline-none appearance-none">
+                                    <Field as="select" name="habitpre" id="habitpre" data-tracking-id="ConfigHabit-SelectHabitPre-Click" className="w-full border border-white-a rounded h-[56px] bg-transparent px-[15px] text-h1 font-nsbold font-bold text-white-a outline-none appearance-none">
                                         <option value="" className="bg-background-a text-white-a font-nsbold" disabled>Selecciona una opcion...</option>
                                         <option value="antesdesayuno" className="bg-background-a text-white-a font-nsbold">Antes del desayuno</option>
                                         <option value="despuescepillar" className="bg-background-a text-white-a font-nsbold">Despues de cepillarte</option>
@@ -102,7 +102,7 @@ const ConfigHabit = () => {
                                     </div>
                                 </div>
                                 <div className='grid grid-cols-1 mt-3'>
-                                    <Field type="time" name="time" id="time" className="w-full border border-white-a rounded h-[56px] bg-transparent px-[15px] text-h1 font-nsbold font-bold text-white-a outline-none [color-scheme:dark]"></Field>
+                                    <Field type="time" name="time" id="time" data-tracking-id="ConfigHabit-InputTime-Click" className="w-full border border-white-a rounded h-[56px] bg-transparent px-[15px] text-h1 font-nsbold font-bold text-white-a outline-none [color-scheme:dark]"></Field>
                                 </div>
                                 <div className="grid grid-cols-1">
                                     <div className="gap-1 flex justify-start items-center mt-6">
@@ -111,7 +111,7 @@ const ConfigHabit = () => {
                                     </div>
                                 </div>
                                 <div className='grid grid-cols-1 relative mt-3'>
-                                    <Field as="select" name="repeatdate" id="repeatdate" className="w-full border border-white-a rounded h-[56px] bg-transparent px-[15px] text-h1 font-nsbold font-bold text-white-a outline-none appearance-none">
+                                    <Field as="select" name="repeatdate" id="repeatdate" data-tracking-id="ConfigHabit-SelectRepeat-Click" className="w-full border border-white-a rounded h-[56px] bg-transparent px-[15px] text-h1 font-nsbold font-bold text-white-a outline-none appearance-none">
                                         <option value="unavez" className="bg-background-a text-white-a font-nsbold">Una vez</option>
                                         <option value="diariamente" className="bg-background-a text-white-a font-nsbold">Diariamente</option>
                                         <option value="lunesaviernes" className="bg-background-a text-white-a font-nsbold">Lunes a Viernes</option>
@@ -129,7 +129,7 @@ const ConfigHabit = () => {
                                 </div>
                                 <ErrorMessage name="habitpre" component="div" />
                                 <div className='flex justify-center'>
-                                    <button className="w-full mt-6 bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2" type="submit" disabled={isSubmitting || !isValid} >
+                                    <button data-tracking-id="ConfigHabit-BtnSave-Click" className="w-full mt-6 bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2" type="submit" disabled={isSubmitting || !isValid} >
                                         {isSubmitting ? 'Enviando...' : 'Guardar'}
                                     </button>
                                 </div>
@@ -145,7 +145,7 @@ const ConfigHabit = () => {
                 <div className="grid grid-cols-1">
                     <Link to="/">
                         <div className="flex justify-center">
-                            <button className="w-full mt-3 border border-secundary h-14 text-white-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2">Regresar</button>
+                            <button data-tracking-id="ConfigHabit-BtnReturn-Click" className="w-full mt-3 border border-secundary h-14 text-white-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2">Regresar</button>
                         </div>
                     </Link>
                 </div>

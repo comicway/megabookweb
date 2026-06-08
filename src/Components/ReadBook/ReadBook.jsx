@@ -57,13 +57,13 @@ const ReadBook = () => {
                         {({ isSubmitting }) => (
                             <Form className="container mx-auto">
                                 <div>
-                                    <Field className="w-full border border-white-a rounded h-[56px] bg-transparent px-[15px] text-h1 font-nsbold font-bold text-white-a outline-none appearance-none" name="time" type="text" placeholder="Ejemplo 25 min"></Field>
+                                    <Field data-tracking-id="ReadBook-InputTime-Click" className="w-full border border-white-a rounded h-[56px] bg-transparent px-[15px] text-h1 font-nsbold font-bold text-white-a outline-none appearance-none" name="time" type="text" placeholder="Ejemplo 25 min"></Field>
                                 </div>
                                 <div className="text-secundary flex justify-center font-nsitalic mt-2">
                                     <ErrorMessage name="time" />
                                 </div>
                                 <div className="flex justify-center">
-                                    <button className="w-full mt-6 bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2" type="submit" disabled={isSubmitting}>
+                                    <button data-tracking-id="ReadBook-BtnSaveTime-Click" className="w-full mt-6 bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2" type="submit" disabled={isSubmitting}>
                                         {isSubmitting ? 'Enviando...' : 'Resgistrar tiempo'}
                                     </button>
                                 </div>
@@ -72,7 +72,7 @@ const ReadBook = () => {
                     </Formik>
                     <div className="container mx-auto">
                         <Link to="/timer">
-                            <button className="w-full mt-3 border border-secundary h-14 text-white-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2">
+                            <button data-tracking-id="ReadBook-BtnStartTimer-Click" className="w-full mt-3 border border-secundary h-14 text-white-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2">
                                 Empezar a leer
                             </button>
                         </Link>

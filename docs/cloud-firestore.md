@@ -136,7 +136,7 @@ Para ver las métricas de todos los usuarios:
 
 ## Reglas de Seguridad
 
-Cada usuario solo puede leer y modificar **su propio documento**. Nadie puede acceder a los datos de otro usuario:
+Cada usuario solo puede leer y modificar **su propio documento y sus subcolecciones**. Las reglas de Firestore no se heredan automáticamente, por lo que cada subcolección requiere su propia regla:
 
 ```javascript
 rules_version = '2';
@@ -144,7 +144,14 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{uid} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
+
+      // Subcolección de telemetría de clics
+      match /telemetry/{docId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
     }
   }
 }
 ```
+
+> ⚠️ Sin la regla de `telemetry`, los eventos de tracking son rechazados silenciosamente aunque el código React sea correcto.

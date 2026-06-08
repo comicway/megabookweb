@@ -64,6 +64,7 @@ const Login = () => {
                                 <div className="flex justify-center">
                                     <button
                                         onClick={signInWithGoogle}
+                                        data-tracking-id="Login-BtnGoogle-Click"
                                         className="w-full max-w-[300px] h-14 bg-white-a text-black-a font-nsbold font-bold rounded-full flex justify-center items-center gap-3 shadow-lg hover:scale-[1.02] transition-transform active:scale-[0.98]"
                                     >
                                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" className="w-6 h-6" />
