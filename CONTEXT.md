@@ -42,7 +42,7 @@ To achieve the MVP goal, the following development milestones will take priority
 
 - [x] **Cloud/Backend:** Integrate **Firebase Firestore** as a centralized database to save persistent user information (streaks, last session timestamp, and users) directly from the client. Metrics are visualized in Firebase Console.
 
-- [ ] **Search:** Scale the current Google Books API integration using a more robust token/plan that can handle massive simultaneous requests from users without being blocked.
+- [X] **Search:** Scale the current Google Books API integration using a more robust token/plan that can handle massive simultaneous requests from users without being blocked.
 
 - [x] **Tracking UI:** Instrument events in React and develop a custom endpoint in the backend (FastAPI) to log telemetry (number of clicks on buttons/books, action time, and screens viewed) without depending on external services.
 

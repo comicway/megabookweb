@@ -96,15 +96,16 @@ const RegisterBook = () => {
 
         const fetchBookData = async () => {
             setLoading(true);
-            const apiKey = 'AIzaSyBzpG3HDLwYjHSYiEPJxgKVTyOizFL33cY';
             const encodedQuery = encodeURIComponent(query);
-
-            const apiUrl = `https://www.googleapis.com/books/v1/volumes?q=${encodedQuery}&key=${apiKey}`;
+            const apiUrl = `/api/books?q=${encodedQuery}`;
 
             try {
                 const response = await fetch(apiUrl);
 
                 if (!response.ok) {
+                    if (response.status === 429 || response.status >= 500) {
+                        throw new Error('SERVER_BUSY');
+                    }
                     throw new Error('No se pudo obtener la respuesta de la API');
                 }
 
@@ -118,7 +119,11 @@ const RegisterBook = () => {
                 return data;
 
             } catch (err) {
-                setError(err.message);
+                if (err.message === 'SERVER_BUSY') {
+                    setError('Servidor ocupado. Por favor, intenta de nuevo en unos momentos.');
+                } else {
+                    setError('Error al buscar libros. Revisa tu conexión.');
+                }
             } finally {
                 setLoading(false);
             }
@@ -129,7 +134,14 @@ const RegisterBook = () => {
     }, [query]);
 
     if (error) {
-        return <div>Error: {error}</div>;
+        return (
+            <div className="container mx-auto px-2 mt-[40px] text-center">
+                <div className="border border-secundary rounded-md p-6">
+                    <p className="text-white-a font-nsbold text-lg">{error}</p>
+                    <button onClick={() => setError(null)} className="mt-4 bg-secundary text-black-a px-6 py-2 rounded-full font-nsbold">Intentar de nuevo</button>
+                </div>
+            </div>
+        );
     }
 
     return (

@@ -39,17 +39,21 @@ const BookLog = () => {
             }
 
             setLoading(true);
-
-            const apiKey = 'AIzaSyBzpG3HDLwYjHSYiEPJxgKVTyOizFL33cY';
             const librosEncontrados = [];
 
             try {
-
                 for (const id of ids) {
-
-                    const apiUrl = `https://www.googleapis.com/books/v1/volumes/${id}?key=${apiKey}`;
+                    const apiUrl = `/api/books?id=${encodeURIComponent(id)}`;
 
                     const response = await fetch(apiUrl);
+                    
+                    if (!response.ok) {
+                        if (response.status === 429 || response.status >= 500) {
+                            throw new Error('SERVER_BUSY');
+                        }
+                        throw new Error(`HTTP Error: ${response.status}`);
+                    }
+                    
                     const data = await response.json();
 
                     librosEncontrados.push(data);
@@ -62,7 +66,11 @@ const BookLog = () => {
                 }
 
             } catch (err) {
-                setError("setError catch: " + err.message);
+                if (err.message === 'SERVER_BUSY') {
+                    setError('Servidor ocupado. Por favor, intenta de nuevo en unos momentos.');
+                } else {
+                    setError("Error al cargar la biblioteca. Por favor intenta más tarde.");
+                }
             } finally {
                 setLoading(false);
             }
@@ -73,7 +81,14 @@ const BookLog = () => {
     }, [user]);
 
     if (error) {
-        return <div>Error - {error}</div>;
+        return (
+            <div className="container mx-auto px-2 mt-[40px] text-center">
+                <div className="border border-secundary rounded-md p-6">
+                    <p className="text-white-a font-nsbold text-lg">{error}</p>
+                    <button onClick={() => window.location.reload()} className="mt-4 bg-secundary text-black-a px-6 py-2 rounded-full font-nsbold">Reintentar</button>
+                </div>
+            </div>
+        );
     }
 
     return (
