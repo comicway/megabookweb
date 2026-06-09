@@ -28,6 +28,7 @@ MegaBook es una aplicación avanzada de seguimiento de hábitos de lectura y pro
 ### 🛡️ Arquitectura y Tecnología
 
 - **Persistencia Cloud-First**: La biblioteca y configuración de hábito se persisten exclusivamente en **Firebase Firestore**. Las rachas usan un modelo híbrido (localStorage + Firestore).
+- **Proxy Serverless y Caché**: Integración con Google Books intermediada por una Serverless Function de Vercel con Edge Caching agresivo para proteger las cuotas de API, sumado a un manejo elegante de errores (Graceful Degradation) en frontend.
 - **Telemetría de Clics**: Sistema de tracking frontend (`useTracking`) que registra el tiempo entre interacciones clave del usuario directamente en Firestore, sin servicios externos.
 - **Diseño Modular**: Lógica de negocio separada en utilidades y hooks personalizados para una alta mantenibilidad.
 - **Reseteo Automático**: Sistema inteligente de detección de nueva semana que limpia el tablero de forma segura.
@@ -39,6 +40,7 @@ MegaBook es una aplicación avanzada de seguimiento de hábitos de lectura y pro
 - [Persistencia y Hooks](./persistence.md): Cómo funciona el almacenamiento local y el custom hook `useLocalStorage`.
 - [Persistencia en la Nube con Firestore](./cloud-firestore.md): Integración con Firebase Firestore para sincronizar rachas, biblioteca y configuración de hábito entre dispositivos.
 - [Sistema de Telemetría de Clics](./tracking-telemetry.md): Motor de tracking frontend que mide el tiempo entre interacciones del usuario para analizar la eficacia del flujo.
+- [Optimización API Google Books](./google-books-api.md): Detalles sobre la arquitectura Serverless, Caché en el Edge y manejo de errores 429 en frontend.
 - [Componentes UI](./components-ui.md): Guía detallada de todos los componentes visuales de la aplicación.
 - [Setup de Desarrollo](./setup-desarrollo.md): Guía para configurar el entorno de trabajo local.
 - [Manual de Estilos y Diseño](./estilos-y-dise%C3%B1o.md): Definición de la identidad visual y componentes CSS.
