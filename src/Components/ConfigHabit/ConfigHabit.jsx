@@ -62,8 +62,23 @@ const ConfigHabit = () => {
                         onSubmit={async (values, { setSubmitting }) => {
                             if (user) {
                                 try {
+                                    // Convertir hora local de Chile (CLT/CLST) a UTC
+                                    // El objeto Date del browser respeta el DST automáticamente
+                                    // sin necesidad de hardcodear el offset -3 o -4
+                                    let timeUTC = values.time;
+                                    if (values.time) {
+                                        const [hours, minutes] = values.time.split(':');
+                                        const localDate = new Date();
+                                        localDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+                                        const utcHour = localDate.getUTCHours().toString().padStart(2, '0');
+                                        const utcMinute = localDate.getUTCMinutes().toString().padStart(2, '0');
+                                        timeUTC = `${utcHour}:${utcMinute}`;
+                                    }
+
                                     const userRef = doc(db, 'users', user.uid);
-                                    await updateDoc(userRef, { habit_config: values });
+                                    await updateDoc(userRef, {
+                                        habit_config: { ...values, time: timeUTC }
+                                    });
                                     setSuccessMessage('Configurado exitosamente en la nube');
                                 } catch (error) {
                                     console.error("Error guardando en Firestore:", error);

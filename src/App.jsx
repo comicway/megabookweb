@@ -11,6 +11,7 @@ import ToolBar from './Components/ToolBar/ToolBar'
 import Login from './Components/Auth/Login'
 import ProtectedRoute from './Components/Auth/ProtectedRoute'
 import { useTracking } from './hooks/useTracking'
+import { usePushSubscription } from './hooks/usePushSubscription'
 
 function AppContent() {
   const [h1Router, setH1Router] = useState('Megabook');
@@ -18,6 +19,7 @@ function AppContent() {
   const { user, signOut } = useAuth();
   
   useTracking();
+  usePushSubscription(); // Registra SW y guarda suscripción push en Firestore
 
   const isLoginPage = location.pathname === '/login';
 

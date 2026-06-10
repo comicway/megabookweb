@@ -46,4 +46,4 @@ To achieve the MVP goal, the following development milestones will take priority
 
 - [x] **Tracking UI:** Instrument events in React and develop a custom endpoint in the backend (FastAPI) to log telemetry (number of clicks on buttons/books, action time, and screens viewed) without depending on external services.
 
-- [ ] **Push Notifications (Backend):** Implement workers/tasks in FastAPI that query the user's configuration (`ConfigHabit.jsx`) in the database and trigger Web Push notifications to their browser.
+- [x] **Push Notifications (Backend):** Implement workers/tasks in FastAPI that query the user's configuration (`ConfigHabit.jsx`) in the database and trigger Web Push notifications to their browser.
