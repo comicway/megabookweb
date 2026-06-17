@@ -12,11 +12,13 @@ El `TimerProvider` es el componente de contexto que envuelve la aplicación. Uti
 2.  **Detección de Reset**: Identifica si ha cambiado la semana para limpiar el tablero de checks.
 3.  **Gestión de Rachas**: Calcula si la racha debe incrementarse o romperse cada vez que se completa una sesión.
 
-## Flujo de Datos
+## Flujo de Datos y Sincronización Multi-Dispositivo
 
 1.  `Timer.jsx` actualiza `timerComplete` al finalizar.
+    *   **Nota de Arquitectura:** El Timer utiliza un cálculo absoluto basado en la marca de tiempo (`Date.now() + duracion`) en lugar de restar un segundo a la vez con `setInterval`. Esto previene que el temporizador se congele o se desincronice cuando el navegador entra en modo ahorro de energía (background tab) en dispositivos móviles. Además, fuerza un formato de 2 dígitos visuales (`00:00`) mediante `.padStart(2, '0')`.
 2.  `TimerProvider` detecta el cambio, marca el día en `days` y actualiza `totalStreak`.
-3.  `useLocalStorage` sincroniza automáticamente todos los cambios con el disco.
+3.  `useLocalStorage` actualiza los datos en caché local.
+4.  **Sync en la Nube:** Simultáneamente, `TimerProvider` empaqueta el progreso (`days`, `timerComplete`, etc.) dentro del objeto `timer_state` y lo sube a Firestore. Al iniciar sesión en otro dispositivo, se descarga este estado para igualar el progreso.
 
 ## Estados Principales
 

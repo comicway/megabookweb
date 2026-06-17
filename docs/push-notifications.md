@@ -152,22 +152,14 @@ Rango Medianoche (ej. 23:50 → 00:05):
 
 ---
 
-### 2.3 Cron Job (`vercel.json`)
+### 2.3 Cron Job (Ejecución Automática)
 
-Vercel ejecuta automáticamente el worker usando la expresión cron `*/15 * * * *`, que se lee como: *"cada vez que los minutos sean múltiplo de 15"* (00, 15, 30, 45 de cada hora).
+Debido a las limitaciones del plan **Hobby** de Vercel (que no permite ejecuciones cron cada 15 minutos), se ha retirado la configuración de `vercel.json`. 
 
-```json
-{
-  "crons": [
-    {
-      "path": "/api/workers/notifications",
-      "schedule": "*/15 * * * *"
-    }
-  ]
-}
-```
+En su lugar, el sistema requiere un **servicio de Cron externo** (como *Cron-job.org* o *GitHub Actions*) configurado con la expresión cron `*/15 * * * *` (cada 15 minutos). Este servicio debe realizar una petición HTTP `GET` o `POST` hacia la URL del worker:
+`https://[tu-dominio]/api/workers/notifications`
 
-> **Nota:** La funcionalidad de Cron Jobs requiere el plan **Hobby** de Vercel como mínimo (gratuito con limitaciones). En el plan gratuito se permiten hasta 2 cron jobs por proyecto.
+**Importante:** El servicio externo debe incluir el header de autorización (`Authorization: Bearer <CRON_SECRET>`) para que el endpoint permita la ejecución.
 
 ---
 

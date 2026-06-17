@@ -35,9 +35,12 @@ Es un Custom Hook diseñado para actuar como un reemplazo directo de `useState` 
 
 | Key | Descripción | Sincronizado con Firestore |
 | :--- | :--- | :--- |
-| `timerKey` | Total de timers completados. | No |
-| `lastTimerKey` | Punto de control para evitar dobles checks. | No |
-| `daysFalses` | Estado de los 7 círculos de la semana. | No |
+| `timerKey` | Total de timers completados. | Sí (en `timer_state`) |
+| `lastTimerKey` | Punto de control para evitar dobles checks. | Sí (en `timer_state`) |
+| `daysFalses` | Estado de los 7 círculos de la semana. | Sí (en `timer_state`) |
 | `totalStreak` | Número de racha acumulada. | Sí (`total_streak`) |
-| `LastWeek` | Número de la última semana procesada. | No |
-| `wasSaturdaySuccessful` | Memoria para el puente de racha entre semanas. | No |
+| `LastWeek` | Número de la última semana procesada. | Sí (en `timer_state`) |
+| `wasSaturdaySuccessful` | Memoria para el puente de racha entre semanas. | Sí (en `timer_state`) |
+
+### Sincronización Multi-Dispositivo (Cross-Device Sync)
+Recientemente se implementó una actualización crítica en el `TimerProvider`. Ahora, cada vez que un timer finaliza o se cambia de semana, todas las variables locales (`timerKey`, `daysFalses`, etc.) se empaquetan en un objeto llamado `timer_state` y se guardan en el perfil del usuario en Firestore. Al iniciar sesión desde un dispositivo nuevo (ej. escritorio), la aplicación descarga este `timer_state` e hidrata el `localStorage`, permitiendo una continuidad perfecta entre móvil y escritorio.

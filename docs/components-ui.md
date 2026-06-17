@@ -27,6 +27,7 @@ Biblioteca personal y visualización de progreso.
   2. Si está vacío y hay usuario autenticado, consulta Firestore (`/users/{uid}/book_ids`) e hidrata `localStorage`.
 - Presenta una cuadrícula con las portadas, títulos y autores de los libros encontrados.
 - Si Firestore no está disponible o el campo `book_ids` no existe en el documento, muestra la biblioteca vacía sin lanzar error.
+- Permite la **eliminación directa** de libros desde la biblioteca mediante un botón "X" en cada carátula. Esta acción actualiza el estado local de React al instante y elimina el ID del documento en Firestore usando el método atómico `arrayRemove`.
 
 ## `ConfigBook.jsx`
 
@@ -34,6 +35,7 @@ Panel de control y navegación.
 
 - Contiene los botones principales de interacción: "Leer" y "Configurar".
 - Actúa como punto de entrada para iniciar la sesión de lectura o ajustar la biblioteca.
+- **Interacción Mejorada:** Implementa pseudo-clases de Tailwind (`active:scale-90 duration-200`) en los botones principales para otorgar un feedback táctil de hundimiento prolongado, optimizando la UX en dispositivos móviles.
 
 ## `RegisterBook.jsx`
 
