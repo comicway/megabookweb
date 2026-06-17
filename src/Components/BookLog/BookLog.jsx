@@ -46,14 +46,14 @@ const BookLog = () => {
                     const apiUrl = `/api/books?id=${encodeURIComponent(id)}`;
 
                     const response = await fetch(apiUrl);
-                    
+
                     if (!response.ok) {
                         if (response.status === 429 || response.status >= 500) {
                             throw new Error('SERVER_BUSY');
                         }
                         throw new Error(`HTTP Error: ${response.status}`);
                     }
-                    
+
                     const data = await response.json();
 
                     librosEncontrados.push(data);
@@ -83,7 +83,7 @@ const BookLog = () => {
     const handleDeleteBook = async (bookId) => {
         // 1. Ocultarlo visualmente de inmediato
         setlocalBook(prev => prev.filter(book => book.id !== bookId));
-        
+
         // 2. Borrarlo de la nube
         if (user) {
             try {
@@ -121,12 +121,12 @@ const BookLog = () => {
                     <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
                         {localBook.map((book, index) => (
                             <div key={book.id || index} className="relative">
-                                <button 
+                                <button
                                     onClick={(e) => {
                                         e.preventDefault();
                                         handleDeleteBook(book.id);
                                     }}
-                                    className="absolute top-2 right-2 bg-red-500 text-white-a rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold z-10 hover:bg-red-700 shadow-md"
+                                    className="absolute top-3 right-2 bg-background-b text-white-a rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold z-10 shadow-md"
                                 >
                                     X
                                 </button>
