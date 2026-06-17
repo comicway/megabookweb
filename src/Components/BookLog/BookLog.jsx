@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { useAuth } from '../Context/AuthProvider';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, arrayRemove } from 'firebase/firestore';
 import { db } from '../../logic/firebase';
 
 const BookLog = () => {
@@ -80,6 +80,21 @@ const BookLog = () => {
 
     }, [user]);
 
+    const handleDeleteBook = async (bookId) => {
+        // 1. Ocultarlo visualmente de inmediato
+        setlocalBook(prev => prev.filter(book => book.id !== bookId));
+        
+        // 2. Borrarlo de la nube
+        if (user) {
+            try {
+                const userRef = doc(db, 'users', user.uid);
+                await updateDoc(userRef, { book_ids: arrayRemove(bookId) });
+            } catch (err) {
+                console.error("Error al eliminar el libro:", err);
+            }
+        }
+    };
+
     if (error) {
         return (
             <div className="container mx-auto px-2 mt-[40px] text-center">
@@ -105,7 +120,16 @@ const BookLog = () => {
                 <div className="">
                     <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
                         {localBook.map((book, index) => (
-                            <div key={book.id || index}>
+                            <div key={book.id || index} className="relative">
+                                <button 
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleDeleteBook(book.id);
+                                    }}
+                                    className="absolute top-2 right-2 bg-red-500 text-white-a rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold z-10 hover:bg-red-700 shadow-md"
+                                >
+                                    X
+                                </button>
                                 <img className="book-card shadow-general rounded-md pt-3" src={book.volumeInfo?.imageLinks.thumbnail || 'No hay imagen'} alt={`Portada de ${book.volumeInfo?.title || 'Título Desconocido'}`} />
                                 <div className="text-white-a font-nsextrabold font-extrabold text-sm pt-0.5">
                                     {book.volumeInfo?.title || 'Título Desconocido'}

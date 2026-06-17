@@ -1,7 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../Context/AuthProvider';
-import { doc, getDoc, updateDoc, arrayRemove } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../logic/firebase';
 
 /* Validacion del buscador de libros*/
@@ -85,23 +85,6 @@ const RegisterBook = () => {
 
         setTimeout(() => setStatusMessage(''), 3000);
     };
-
-    const handleDeleteBook = async (bookId) => {
-        setBooks(prev => prev.filter(b => b.id !== bookId));
-        setInputValue(prev => prev.filter(id => id !== bookId));
-
-        if (user) {
-            try {
-                const userRef = doc(db, 'users', user.uid);
-                await updateDoc(userRef, {
-                    book_ids: arrayRemove(bookId)
-                });
-            } catch (err) {
-                console.error("Error al eliminar el libro:", err);
-            }
-        }
-    };
-
 
     useEffect(() => {
 
@@ -221,16 +204,7 @@ const RegisterBook = () => {
                     <div className="">
                         <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
                             {books.map((book) => (
-                                <div className="book-card relative" key={book.id}>
-                                    <button 
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            handleDeleteBook(book.id);
-                                        }}
-                                        className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold z-10 hover:bg-red-700"
-                                    >
-                                        X
-                                    </button>
+                                <div className="book-card" key={book.id}>
                                     <input
                                         type="checkbox"
                                         id={book.id}
