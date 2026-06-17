@@ -4,9 +4,9 @@ import { TimerContext } from '../Context/TimerProvider';
 const Timer = () => {
 
     const [countdownStarted, setCountdownStarted] = useState(false);
-    // const [timeRemaining, setTimeRemaining] = useState(0);
+    const [targetTime, setTargetTime] = useState(null);
 
-    const [segundosTotales, setSegundosTotales] = useState(59);
+    const [segundosTotales, setSegundosTotales] = useState(0);
 
 
     const [timeHabit, setTimeHabit] = useState(() => {
@@ -40,17 +40,11 @@ const Timer = () => {
     }; */
 
     const handleStarted = () => {
-
-        /*const tiempoCrudo = timeHabit?.time || 0;
-        
-        setSegundosTotales(Number(tiempoCrudo) * 60);
-
-        setMinutosTotales(Number(tiempoCrudo));
-
-        setTimeRemaining(segundosTotales);*/
-
-        setCountdownStarted(true);
-
+        const totalSecondsLeft = (minutosTotales * 60) + segundosTotales;
+        if (totalSecondsLeft > 0) {
+            setTargetTime(Date.now() + totalSecondsLeft * 1000);
+            setCountdownStarted(true);
+        }
     };
 
     console.log("Segundos Totales: ", segundosTotales);
@@ -58,52 +52,37 @@ const Timer = () => {
 
     const handleStop = () => {
         setCountdownStarted(false);
+        setTargetTime(null);
         setSegundosTotales(0);
         setMinutosTotales(0);
-        // setTimeRemaining(0);
     };
 
     const { timerComplete, setTimerComplete } = useContext(TimerContext);
 
     useEffect(() => {
-
         let intervalo = null;
 
-        if (countdownStarted && minutosTotales > 0) {
-
+        if (countdownStarted && targetTime) {
             intervalo = setInterval(() => {
+                const remainingMs = targetTime - Date.now();
 
-                if (segundosTotales > 0) {
-
-                    setSegundosTotales((prevSegundos) => prevSegundos - 1);
-
-                    if (segundosTotales == 1) {
-
-                        setMinutosTotales(minutosTotales - 1);
-
-                    }
-
+                if (remainingMs <= 0) {
+                    setSegundosTotales(0);
+                    setMinutosTotales(0);
+                    setCountdownStarted(false);
+                    setTargetTime(null);
+                    setTimerComplete((prev) => prev + 1);
+                    clearInterval(intervalo);
                 } else {
-                    setSegundosTotales(59);
-                };
-
+                    const totalSeconds = Math.ceil(remainingMs / 1000);
+                    setMinutosTotales(Math.floor(totalSeconds / 60));
+                    setSegundosTotales(totalSeconds % 60);
+                }
             }, 1000);
-
-        } else if (segundosTotales == 0 && minutosTotales == 0) {
-
-            setCountdownStarted(false);
-
-        };
-
-        if (countdownStarted == false && minutosTotales == 0) {
-
-            setTimerComplete((prev) => prev + 1);
-
-        };
+        }
 
         return () => { if (intervalo) clearInterval(intervalo); };
-
-    }, [countdownStarted, segundosTotales, minutosTotales]);
+    }, [countdownStarted, targetTime, setTimerComplete]);
 
     console.log("El timer se ha completado ", timerComplete, " veces");
 
@@ -114,7 +93,9 @@ const Timer = () => {
                     {/*<p className="text-[54px]">{formatearMinutos(timeRemaining)}</p>*/}
                     {/*<p className="text-[54px]">{timeRemaining}</p>*/}
                     <div className="bg-primary rounded-md w-full mx-auto shadow-general ">
-                        <p className="font-nsmedium font-medium text-white-a text-daily">{minutosTotales}:{segundosTotales}</p>
+                        <p className="font-nsmedium font-medium text-white-a text-daily">
+                            {minutosTotales.toString().padStart(2, '0')}:{segundosTotales.toString().padStart(2, '0')}
+                        </p>
                     </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-7">

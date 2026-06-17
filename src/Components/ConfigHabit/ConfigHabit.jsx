@@ -79,7 +79,7 @@ const ConfigHabit = () => {
                                     await updateDoc(userRef, {
                                         habit_config: { ...values, time: timeUTC }
                                     });
-                                    setSuccessMessage('Configurado exitosamente en la nube');
+                                    setSuccessMessage('Configurado exitosamente');
                                 } catch (error) {
                                     console.error("Error guardando en Firestore:", error);
                                     setSuccessMessage("Hubo un error al guardar los datos");
@@ -100,6 +100,7 @@ const ConfigHabit = () => {
                                         <option value="despuescepillar" className="bg-background-a text-white-a font-nsbold">Despues de cepillarte</option>
                                         <option value="antesejercicio" className="bg-background-a text-white-a font-nsbold">Antes de hacer ejercicio</option>
                                         <option value="antesdesiesta" className="bg-background-a text-white-a font-nsbold">Antes de la siesta</option>
+                                        <option value="antesdedormir" className="bg-background-a text-white-a font-nsbold">Antes de dormir</option>
                                     </Field>
                                     <div className="absolute right-4 top-[50%] -translate-y-1/2 pointer-events-none">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 fill-white-a" viewBox="0 -960 960 960">
@@ -132,6 +133,11 @@ const ConfigHabit = () => {
                                         <option value="lunesaviernes" className="bg-background-a text-white-a font-nsbold">Lunes a Viernes</option>
                                         <option value="lunes" className="bg-background-a text-white-a font-nsbold">Lunes</option>
                                         <option value="martes" className="bg-background-a text-white-a font-nsbold">Martes</option>
+                                        <option value="miercoles" className="bg-background-a text-white-a font-nsbold">Miercoles</option>
+                                        <option value="jueves" className="bg-background-a text-white-a font-nsbold">Jueves</option>
+                                        <option value="viernes" className="bg-background-a text-white-a font-nsbold">Viernes</option>
+                                        <option value="sabado" className="bg-background-a text-white-a font-nsbold">Sabado</option>
+                                        <option value="domingo" className="bg-background-a text-white-a font-nsbold">Domingo</option>
                                     </Field>
                                     <div className="absolute right-4 top-[50%] -translate-y-1/2 pointer-events-none">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 fill-white-a" viewBox="0 -960 960 960">

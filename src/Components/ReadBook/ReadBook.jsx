@@ -31,7 +31,7 @@ const ReadBook = () => {
     return (
         <>
             <div className="container mx-auto px-2 mt-[20px]">
-                <div className="grid grid-cols-1 text-center text-white-a">
+                <div className="grid grid-cols-1 text-center text-white-a mb-[20px]">
                     <h1 className="font-nsbold font-black text-daily leading-[0.8]">{timeHabit.time} min</h1>
                     <p className="font-nsmedium font-medium text-h1">tiempo de lectura</p>
                 </div>
