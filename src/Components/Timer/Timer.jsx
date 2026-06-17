@@ -100,7 +100,7 @@ const Timer = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-7">
                     <button onClick={handleStop} data-tracking-id="Timer-BtnStop-Click" className="w-[98%] border border-secundary h-14 text-white-a font-nsbold font-bold rounded-full text-btn flex justify-center items-center gap-2">STOP</button>
-                    <button onClick={handleStarted} data-tracking-id="Timer-BtnPlay-Click" className="w-[98%] bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2">PLAY</button>
+                    <button onClick={handleStarted} data-tracking-id="Timer-BtnPlay-Click" className="w-[98%] bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2 active:opacity-70 active:scale-[0.98] transition-all duration-150">PLAY</button>
                 </div>
                 <div className="grid grid-cols-1 mt-7">
                     <div className="border border-white-a rounded-md w-full flex p-3 items-center">

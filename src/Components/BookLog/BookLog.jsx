@@ -100,7 +100,7 @@ const BookLog = () => {
             <div className="container mx-auto px-2 mt-[40px] text-center">
                 <div className="border border-secundary rounded-md p-6">
                     <p className="text-white-a font-nsbold text-lg">{error}</p>
-                    <button onClick={() => window.location.reload()} className="mt-4 bg-secundary text-black-a px-6 py-2 rounded-full font-nsbold">Reintentar</button>
+                    <button onClick={() => window.location.reload()} className="mt-4 bg-secundary text-black-a px-6 py-2 rounded-full font-nsbold active:opacity-70 active:scale-[0.98] transition-all duration-150">Reintentar</button>
                 </div>
             </div>
         );
