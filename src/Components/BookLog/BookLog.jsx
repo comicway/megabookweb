@@ -126,7 +126,7 @@ const BookLog = () => {
                                         e.preventDefault();
                                         handleDeleteBook(book.id);
                                     }}
-                                    className="absolute top-3 right-2 bg-background-b text-white-a rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold z-10 shadow-md"
+                                    className="absolute top-5 right-2 bg-background-b text-white-a rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold z-10 shadow-md"
                                 >
                                     X
                                 </button>
