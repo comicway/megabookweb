@@ -137,7 +137,7 @@ const RegisterBook = () => {
             <div className="container mx-auto px-2 mt-[40px] text-center">
                 <div className="border border-secundary rounded-md p-6">
                     <p className="text-white-a font-nsbold text-lg">{error}</p>
-                    <button onClick={() => setError(null)} className="mt-4 bg-secundary text-black-a px-6 py-2 rounded-full font-nsbold active:opacity-70 active:scale-[0.98] transition-all duration-150">Intentar de nuevo</button>
+                    <button onClick={() => setError(null)} className="mt-4 bg-secundary text-black-a px-6 py-2 rounded-full font-nsbold active:opacity-70 active:scale-90 transition-all duration-200">Intentar de nuevo</button>
                 </div>
             </div>
         );
@@ -183,7 +183,7 @@ const RegisterBook = () => {
                                     <button
                                         type="submit"
                                         data-tracking-id="RegisterBook-BtnSearchFull-Click"
-                                        className="w-full mt-3 bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2 active:opacity-70 active:scale-[0.98] transition-all duration-150"
+                                        className="w-full mt-3 bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2 active:opacity-70 active:scale-90 transition-all duration-200"
                                         disabled={loading}
                                     >
                                         <svg

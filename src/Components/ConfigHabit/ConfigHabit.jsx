@@ -150,7 +150,7 @@ const ConfigHabit = () => {
                                 </div>
                                 <ErrorMessage name="habitpre" component="div" />
                                 <div className='flex justify-center'>
-                                    <button data-tracking-id="ConfigHabit-BtnSave-Click" className="w-full mt-6 bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2 active:opacity-70 active:scale-[0.98] transition-all duration-150" type="submit" disabled={isSubmitting || !isValid} >
+                                    <button data-tracking-id="ConfigHabit-BtnSave-Click" className="w-full mt-6 bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2 active:opacity-70 active:scale-90 transition-all duration-200" type="submit" disabled={isSubmitting || !isValid} >
                                         {isSubmitting ? 'Enviando...' : 'Guardar'}
                                     </button>
                                 </div>

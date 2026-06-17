@@ -7,7 +7,7 @@ const ConfigBook = () => {
                 <div className="grid grid-cols-1">
                     <div>
                         <Link to="/readbook">
-                            <button data-tracking-id="Home-BtnStartReading-Click" className="w-full bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn flex justify-center items-center gap-2 shadow-general active:opacity-70 active:scale-[0.98] transition-all duration-150">
+                            <button data-tracking-id="Home-BtnStartReading-Click" className="w-full bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn flex justify-center items-center gap-2 shadow-general active:opacity-70 active:scale-90 transition-all duration-200">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 -960 960 960"
