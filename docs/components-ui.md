@@ -16,6 +16,10 @@ El motor de actividad principal de la aplicación.
 
 - Permite iniciar y detener sesiones de lectura enfocada.
 - Al finalizar el tiempo, dispara automáticamente la actualización del estado global a través de `TimerContext`.
+- **Feedback Visual:** El botón de PLAY reduce su opacidad al 50% (`opacity-50`) mientras el contador está en marcha, y todos los botones tienen efecto de hundimiento táctil (`active:scale-90`) optimizado para móviles.
+- **Sonido de Campana (Web Audio API):** Al llegar a cero, genera un sonido sintético de campana directamente desde el navegador usando `AudioContext`, sin necesidad de archivos de audio externos.
+- **Notificación Nativa (Notification API):** Simultáneamente al sonido, lanza una notificación del sistema operativo visible incluso si el usuario tiene otra pestaña abierta o el teléfono en reposo. Los permisos se solicitan de forma anticipada al montar el componente para evitar interrupciones.
+- Para el detalle completo de la arquitectura del contador, ver [timer-system.md](./timer-system.md).
 
 ## `BookLog.jsx`
 

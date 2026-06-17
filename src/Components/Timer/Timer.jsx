@@ -1,16 +1,15 @@
 import { useState, useEffect, useContext } from "react";
 import { TimerContext } from '../Context/TimerProvider';
+import { playBellSound } from '../../hooks/useTimerSound';
+import useTimerNotification from '../../hooks/useTimerNotification';
 
 const Timer = () => {
 
     const [countdownStarted, setCountdownStarted] = useState(false);
     const [targetTime, setTargetTime] = useState(null);
-
     const [segundosTotales, setSegundosTotales] = useState(0);
 
-
-    const [timeHabit, setTimeHabit] = useState(() => {
-
+    const [timeHabit] = useState(() => {
         try {
             const timeGuardado = localStorage.getItem('timeFormData');
             return timeGuardado ? JSON.parse(timeGuardado) : {};
@@ -21,23 +20,12 @@ const Timer = () => {
     });
 
     const [minutosTotales, setMinutosTotales] = useState(() => {
-
         const tiempoCrudo = timeHabit?.time || 0;
-
-        return (Number(tiempoCrudo));
-
+        return Number(tiempoCrudo);
     });
 
-    console.log("aqui la data del tiempo ", timeHabit);
-
-    /* const formatearMinutos = (minutos) => {
-       
-        const minutosTexto = String(minutos);
-
-        const minutosConCero = minutosTexto.padStart(2, '0');
-
-        return `${minutosConCero}:00`;
-    }; */
+    const { timerComplete, setTimerComplete } = useContext(TimerContext);
+    const { showTimerNotification } = useTimerNotification();
 
     const handleStarted = () => {
         const totalSecondsLeft = (minutosTotales * 60) + segundosTotales;
@@ -47,17 +35,12 @@ const Timer = () => {
         }
     };
 
-    console.log("Segundos Totales: ", segundosTotales);
-    console.log("Minutos Totales: ", minutosTotales);
-
     const handleStop = () => {
         setCountdownStarted(false);
         setTargetTime(null);
         setSegundosTotales(0);
         setMinutosTotales(0);
     };
-
-    const { timerComplete, setTimerComplete } = useContext(TimerContext);
 
     useEffect(() => {
         let intervalo = null;
@@ -72,6 +55,8 @@ const Timer = () => {
                     setCountdownStarted(false);
                     setTargetTime(null);
                     setTimerComplete((prev) => prev + 1);
+                    playBellSound();
+                    showTimerNotification();
                     clearInterval(intervalo);
                 } else {
                     const totalSeconds = Math.ceil(remainingMs / 1000);
@@ -83,8 +68,6 @@ const Timer = () => {
 
         return () => { if (intervalo) clearInterval(intervalo); };
     }, [countdownStarted, targetTime, setTimerComplete]);
-
-    console.log("El timer se ha completado ", timerComplete, " veces");
 
     return (
         <>
@@ -100,7 +83,7 @@ const Timer = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-7">
                     <button onClick={handleStop} data-tracking-id="Timer-BtnStop-Click" className="w-[98%] border border-secundary h-14 text-white-a font-nsbold font-bold rounded-full text-btn flex justify-center items-center gap-2">STOP</button>
-                    <button onClick={handleStarted} data-tracking-id="Timer-BtnPlay-Click" className="w-[98%] bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2 active:opacity-70 active:scale-90 transition-all duration-200">PLAY</button>
+                    <button onClick={handleStarted} data-tracking-id="Timer-BtnPlay-Click" className={`w-[98%] bg-secundary h-14 text-black-a font-nsbold font-bold rounded-full text-btn shadow-general flex justify-center items-center gap-2 active:opacity-70 active:scale-90 transition-all duration-200 ${countdownStarted ? 'opacity-50' : ''}`}>PLAY</button>
                 </div>
                 <div className="grid grid-cols-1 mt-7">
                     <div className="border border-white-a rounded-md w-full flex p-3 items-center">

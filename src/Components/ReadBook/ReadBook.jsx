@@ -78,7 +78,7 @@ const ReadBook = () => {
                         </Link>
                     </div>
                     {successMessage && (
-                        <div className="mx-[5px] text-gren font-bold">{successMessage}</div>
+                        <div className="text-secondary flex justify-center font-nsitalic mt-2">{successMessage}</div>
                     )}
                 </div>
             </div>
