@@ -1,11 +1,12 @@
-import admin from 'firebase-admin';
+import { initializeApp, getApps, cert } from 'firebase-admin/app';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import webpush from 'web-push';
 
 // ─── Inicialización Firebase Admin ───────────────────────────────────────────
-if (!admin.apps.length) {
+if (!getApps().length) {
   try {
     const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
-    admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+    initializeApp({ credential: cert(serviceAccount) });
   } catch (error) {
     console.error('Error al inicializar Firebase Admin:', error);
   }
@@ -62,7 +63,7 @@ export default async function handler(req, res) {
     return res.status(401).end('No autorizado');
   }
 
-  const db = admin.firestore();
+  const db = getFirestore();
   let notificacionesEnviadas = 0;
 
   try {
@@ -129,7 +130,7 @@ export default async function handler(req, res) {
             // 410 Gone → suscripción expirada, limpiar Firestore
             if (err.statusCode === 410) {
               db.collection('users').doc(doc.id).update({
-                push_subscription: admin.firestore.FieldValue.delete(),
+                push_subscription: FieldValue.delete(),
               });
             }
           })
