@@ -25,7 +25,7 @@ const CHILE_OFFSET_HOURS = 4;
 
 function getChileDayOfWeek(nowUTC) {
   const chileMs = nowUTC.getTime() - CHILE_OFFSET_HOURS * 60 * 60 * 1000;
-  return new Date(chileMs).getDay(); // 0=Dom 1=Lun 2=Mar 3=Mié 4=Jue 5=Vie 6=Sáb
+  return new Date(chileMs).getUTCDay(); // 0=Dom 1=Lun 2=Mar 3=Mié 4=Jue 5=Vie 6=Sáb
 }
 
 // ─── Helper: ¿Corresponde notificar hoy? ─────────────────────────────────────
@@ -51,7 +51,14 @@ function shouldNotifyToday(repeatdate, nowUTC) {
 
 // ─── Handler principal ────────────────────────────────────────────────────────
 export default async function handler(req, res) {
-  if (req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) {
+  // Flexibilidad de Auth: Permite token vía Header (Bearer) o Query String (útil para cron-job.org)
+  const authHeader = req.headers.authorization;
+  const querySecret = req.query.secret;
+  
+  const isValidHeader = authHeader === `Bearer ${process.env.CRON_SECRET}`;
+  const isValidQuery = querySecret === process.env.CRON_SECRET;
+
+  if (!isValidHeader && !isValidQuery) {
     return res.status(401).end('No autorizado');
   }
 
@@ -59,15 +66,15 @@ export default async function handler(req, res) {
   let notificacionesEnviadas = 0;
 
   try {
-    // 1. Calcular ventana de tiempo en UTC
+    // 1. Calcular ventana de tiempo en estricto UTC
     const now = new Date();
-    const currentHour   = now.getHours().toString().padStart(2, '0');
-    const currentMinute = now.getMinutes().toString().padStart(2, '0');
+    const currentHour   = now.getUTCHours().toString().padStart(2, '0');
+    const currentMinute = now.getUTCMinutes().toString().padStart(2, '0');
     const currentTimeString = `${currentHour}:${currentMinute}`;
 
     const past = new Date(now.getTime() - 15 * 60000);
-    const pastHour   = past.getHours().toString().padStart(2, '0');
-    const pastMinute = past.getMinutes().toString().padStart(2, '0');
+    const pastHour   = past.getUTCHours().toString().padStart(2, '0');
+    const pastMinute = past.getUTCMinutes().toString().padStart(2, '0');
     const pastTimeString = `${pastHour}:${pastMinute}`;
 
     let usersSnapshotDocs = [];
