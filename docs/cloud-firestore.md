@@ -24,7 +24,8 @@ Cada usuario autenticado tiene un documento en la colección `users`, usando su 
   ├── email: "usuario@gmail.com"
   ├── name: "Juan"
   ├── created_at: timestamp    ← fecha de primer registro, nunca se sobreescribe
-  ├── last_session: timestamp  ← última sesión de lectura completada
+  ├── last_session: timestamp  ← timestamp bruto (con fines de telemetría o auditoría)
+  ├── last_session_date: "YYYY-MM-DD"  ← String estricto. Es la "llave maestra" para el cálculo matemático de la racha actual.
   ├── total_streak: 34         ← racha actual activa
   ├── max_streak: 34           ← racha máxima histórica (nunca disminuye)
   ├── book_ids: ["abc123", "xyz789"]  ← IDs de Google Books de la biblioteca personal

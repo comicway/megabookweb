@@ -8,7 +8,7 @@ Esta versión web es el PMV en producción.
 
 ## 🔥 Características Destacadas
 
-*   **Rachas Infinitas (Success Bridge)**: Un sistema de streaks que no se rompe al cambiar de semana.
+*   **Rachas Resilientes y Estrictas**: Un sistema basado en fechas absolutas que garantiza que tu racha se mantenga si cumples en días consecutivos, y se reinicie automáticamente de forma honesta ante la inactividad prolongada (> 1 día).
 *   **Temporizador de Enfoque**: Sesiones de lectura controladas para maximizar tu concentración.
 *   **Integración con Google Books**: Busca y agrega libros reales a tu biblioteca personal en segundos.
 *   **Habit Stacking**: Configura tus sesiones basándote en anclajes de hábitos preexistentes.
