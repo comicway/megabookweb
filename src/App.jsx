@@ -12,6 +12,7 @@ import Login from './Components/Auth/Login'
 import ProtectedRoute from './Components/Auth/ProtectedRoute'
 import { useTracking } from './hooks/useTracking'
 import { usePushSubscription } from './hooks/usePushSubscription'
+import logoMega from './assets/img/logomega.svg'
 
 function AppContent() {
   const [h1Router, setH1Router] = useState('Megabook');
@@ -26,7 +27,7 @@ function AppContent() {
   useEffect(() => {
     switch (location.pathname) {
       case '/':
-        setH1Router('Megabook');
+        setH1Router(<img src={logoMega} alt="Megabook Logo" className="h-[25px] w-auto object-contain" />);
         break;
       case '/readbook':
         setH1Router('Nueva Sesión');
