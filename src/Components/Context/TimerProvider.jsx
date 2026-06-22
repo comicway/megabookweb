@@ -1,9 +1,9 @@
 import { createContext, useEffect } from 'react';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import { dayNames, getWeekNumber, getYesterdayInfo } from '../../logic/dateUtils';
-import { calculateStreak } from '../../logic/streak';
+import { dayNames, getWeekNumber } from '../../logic/dateUtils';
+import { calculateStreak, getLocalYYYYMMDD } from '../../logic/streak';
 import { useAuth } from './AuthProvider';
-import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, serverTimestamp, increment } from 'firebase/firestore';
 import { db } from '../../logic/firebase';
 
 export const TimerContext = createContext();
@@ -21,15 +21,15 @@ export const TimerProvider = ({ children }) => {
     const [totalStreak, setTotalStreak] = useLocalStorage('totalStreak', 0);
     const [maxStreak, setMaxStreak] = useLocalStorage('maxStreak', 0);
     const [lastWeek, setLastWeek] = useLocalStorage('LastWeek', 0);
-    const [wasSaturdaySuccessful, setWasSaturdaySuccessful] = useLocalStorage('wasSaturdaySuccessful', false);
+    const [lastSessionDate, setLastSessionDate] = useLocalStorage('lastSessionDate', null); // "YYYY-MM-DD"
 
-    // Estado de los días (Cargado desde localStorage)
+    // Estado visual de la semana (Cargado desde localStorage)
     const [days, setDays] = useLocalStorage('daysFalses', {
         sunday: false, monday: false, tuesday: false, wednesday: false,
         thursday: false, friday: false, saturday: false
     });
 
-    // Sincronización inicial desde Firestore (Para cargar datos de la nube en nuevos dispositivos)
+    // Sincronización inicial desde Firestore
     useEffect(() => {
         if (user) {
             const loadFirestoreData = async () => {
@@ -40,12 +40,13 @@ export const TimerProvider = ({ children }) => {
                         const data = userSnap.data();
                         if (data.total_streak !== undefined) setTotalStreak(data.total_streak);
                         if (data.max_streak !== undefined) setMaxStreak(data.max_streak);
+                        if (data.last_session_date) setLastSessionDate(data.last_session_date);
+                        
                         if (data.timer_state) {
                             if (data.timer_state.days) setDays(data.timer_state.days);
                             if (data.timer_state.timerComplete !== undefined) setTimerComplete(data.timer_state.timerComplete);
                             if (data.timer_state.lastTimerCount !== undefined) setLastTimerCount(data.timer_state.lastTimerCount);
                             if (data.timer_state.lastWeek !== undefined) setLastWeek(data.timer_state.lastWeek);
-                            if (data.timer_state.wasSaturdaySuccessful !== undefined) setWasSaturdaySuccessful(data.timer_state.wasSaturdaySuccessful);
                         }
                     }
                 } catch (error) {
@@ -56,12 +57,10 @@ export const TimerProvider = ({ children }) => {
         }
     }, [user]);
 
-    // Sincronización de cambio de semana
+    // Reseteo visual de los checks cada nueva semana
     useEffect(() => {
         if (lastWeek !== 0 && lastWeek !== currentWeek) {
-            console.log("¡Semana Nueva detectada! Reseteando tablero...");
-            const prevSaturday = days.saturday;
-            setWasSaturdaySuccessful(prevSaturday);
+            console.log("¡Semana Nueva detectada! Reseteando tablero visual...");
             const resetDays = {
                 sunday: false, monday: false, tuesday: false, wednesday: false,
                 thursday: false, friday: false, saturday: false
@@ -72,39 +71,33 @@ export const TimerProvider = ({ children }) => {
             if (user) {
                 const userRef = doc(db, 'users', user.uid);
                 updateDoc(userRef, {
-                    timer_state: {
-                        days: resetDays,
-                        timerComplete: timerComplete,
-                        lastTimerCount: timerComplete,
-                        lastWeek: currentWeek,
-                        wasSaturdaySuccessful: prevSaturday
-                    }
+                    'timer_state.days': resetDays,
+                    'timer_state.lastWeek': currentWeek,
+                    'timer_state.lastTimerCount': timerComplete
                 }).catch(console.error);
             }
         }
         setLastWeek(currentWeek);
     }, [currentWeek, lastWeek]);
 
-    // Procesa el fin de un timer, actualiza racha local y sincroniza a la nube
+    // Procesa el fin de un timer: Actualiza racha con base en Fechas (Date)
     useEffect(() => {
         if (timerComplete > 0 && lastTimerCount < timerComplete) {
             
+            const todayStr = getLocalYYYYMMDD();
             let updatedDays = days;
-            let newTotal = totalStreak;
-
+            
             // Si es el primer timer completado del día
             if (!days[currentDayName]) {
                 updatedDays = { ...days, [currentDayName]: true };
                 setDays(updatedDays);
-
-                // Lógica de Racha Infinita
-                const { name, isAcrossWeek } = getYesterdayInfo(todayIs);
-                const yesterdayWasSuccessful = isAcrossWeek ? wasSaturdaySuccessful : days[name];
-
-                newTotal = yesterdayWasSuccessful ? totalStreak + 1 : 1;
-                setTotalStreak(newTotal);
             }
 
+            // Calculamos la nueva racha de forma estricta (salto > 1 día resetea)
+            const newTotal = calculateStreak(lastSessionDate, todayStr, totalStreak);
+            
+            setTotalStreak(newTotal);
+            setLastSessionDate(todayStr);
             setLastTimerCount(timerComplete);
 
             const syncData = async () => {
@@ -113,51 +106,38 @@ export const TimerProvider = ({ children }) => {
                         const userRef = doc(db, 'users', user.uid);
                         const userSnap = await getDoc(userRef);
                         
-                        let dbMax = 0;
-                        if (userSnap.exists()) {
-                            dbMax = userSnap.data().max_streak || 0;
-                        }
+                        let dbMax = userSnap.exists() ? (userSnap.data().max_streak || 0) : 0;
+                        const finalMax = Math.max(newTotal, dbMax, maxStreak);
+                        setMaxStreak(finalMax);
                         
-                        setMaxStreak(prevMax => {
-                            const finalMax = Math.max(newTotal, dbMax, prevMax);
-                            
-                            // Guardamos todo el estado local en Firestore para mantener sincronización entre dispositivos
-                            updateDoc(userRef, {
-                                last_session: serverTimestamp(),
-                                total_streak: newTotal,
-                                max_streak: finalMax,
-                                timer_state: {
-                                    days: updatedDays,
-                                    timerComplete: timerComplete,
-                                    lastTimerCount: timerComplete,
-                                    lastWeek: lastWeek,
-                                    wasSaturdaySuccessful: wasSaturdaySuccessful
-                                }
-                            }).catch(error => {
-                                console.error("Error al guardar racha en Firestore:", error.message);
-                            });
-                            
-                            return finalMax;
+                        // Guardado atómico de la data
+                        await updateDoc(userRef, {
+                            last_session: serverTimestamp(),
+                            last_session_date: todayStr, // Clave para cálculo independiente de zona
+                            total_streak: newTotal,
+                            max_streak: finalMax,
+                            'timer_state.days': updatedDays,
+                            'timer_state.timerComplete': timerComplete,
+                            'timer_state.lastTimerCount': timerComplete,
+                            'timer_state.lastWeek': lastWeek
                         });
+                        
                     } catch (error) {
-                        console.error("Error consultando max_streak real (posiblemente offline):", error.message);
-                        setMaxStreak(prevMax => {
-                            const finalMax = Math.max(newTotal, prevMax);
-                            const userRef = doc(db, 'users', user.uid);
-                            updateDoc(userRef, {
-                                last_session: serverTimestamp(),
-                                total_streak: newTotal,
-                                max_streak: finalMax,
-                                timer_state: {
-                                    days: updatedDays,
-                                    timerComplete: timerComplete,
-                                    lastTimerCount: timerComplete,
-                                    lastWeek: lastWeek,
-                                    wasSaturdaySuccessful: wasSaturdaySuccessful
-                                }
-                            }).catch(err => console.error("Error al encolar actualización offline:", err.message));
-                            return finalMax;
-                        });
+                        console.error("Error offline/online al guardar racha:", error.message);
+                        // Fallback local guardando offline state
+                        const finalMax = Math.max(newTotal, maxStreak);
+                        setMaxStreak(finalMax);
+                        const userRef = doc(db, 'users', user.uid);
+                        updateDoc(userRef, {
+                            last_session: serverTimestamp(),
+                            last_session_date: todayStr,
+                            total_streak: newTotal,
+                            max_streak: finalMax,
+                            'timer_state.days': updatedDays,
+                            'timer_state.timerComplete': timerComplete,
+                            'timer_state.lastTimerCount': timerComplete,
+                            'timer_state.lastWeek': lastWeek
+                        }).catch(err => console.error(err));
                     }
                 } else {
                     setMaxStreak(prevMax => Math.max(newTotal, prevMax));
@@ -168,10 +148,16 @@ export const TimerProvider = ({ children }) => {
         }
     }, [timerComplete]);
 
-    // Calcular racha en vivo (para la UI)
-    const { name, isAcrossWeek } = getYesterdayInfo(todayIs);
-    const yesterdayWasSuccessful = isAcrossWeek ? wasSaturdaySuccessful : days[name];
-    const liveStreak = (days[currentDayName] || yesterdayWasSuccessful) ? totalStreak : 0;
+    // Calcular racha en vivo (para la UI): si pasaron > 1 días desde la última sesión, visualmente es 0
+    let liveStreak = totalStreak;
+    if (lastSessionDate) {
+        const todayStr = getLocalYYYYMMDD();
+        const diffTime = new Date(todayStr + "T00:00:00").getTime() - new Date(lastSessionDate + "T00:00:00").getTime();
+        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays > 1) {
+            liveStreak = 0; // Visualmente perdió la racha, al terminar timer hoy se reseteará a 1
+        }
+    }
 
     return (
         <TimerContext.Provider value={{
