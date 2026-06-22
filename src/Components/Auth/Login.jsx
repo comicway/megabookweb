@@ -5,6 +5,7 @@ import ico02 from '../../assets/img/ico02.png'
 import ico03 from '../../assets/img/ico03.png'
 import loginRegistreBook from '../../assets/img/loginRegistreBookV2.png'
 import loginRegistreBook3 from '../../assets/img/loginRegistreBookV3.png'
+import logoMega from '../../assets/img/logomega.svg'
 import { useState, useEffect } from 'react'
 import DotBackground from './DotBackground'
 import Footer from '../Footer/Footer'
@@ -49,7 +50,7 @@ const Login = () => {
             <div className="relative z-10">
                 <div className='mx-auto container'>
                     <div className='grid grid-cols-1'>
-                        <h1 className="font-nsdisplayblack text-white-a leading-tight my-3 py-3 text-center">MegaBook</h1>
+                        <img src={logoMega} alt="MegaBook Logo" className="h-[45px] w-auto object-contain mx-auto my-3 py-3" />
                     </div>
                     <div className='grid gird-cols-1'>
                         <div
