@@ -50,7 +50,7 @@ const Login = () => {
             <div className="relative z-10">
                 <div className='mx-auto container'>
                     <div className='grid grid-cols-1'>
-                        <img src={logoMega} alt="MegaBook Logo" className="h-[45px] w-auto object-contain mx-auto my-3 py-3" />
+                        <img src={logoMega} alt="MegaBook Logo" className="h-[65px] w-auto object-contain mx-auto my-3 py-3" />
                     </div>
                     <div className='grid gird-cols-1'>
                         <div
